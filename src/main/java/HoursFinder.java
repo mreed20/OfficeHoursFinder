@@ -20,11 +20,17 @@ public class HoursFinder {
 
         // User login handler.
         app.post("/login", // TODO: store name in database
-                HoursFinder::handleLogin);
+                HoursFinder::handleLoginPost);
 
     }
 
-    private static void handleLogin(Context ctx) {
+
+    /**
+     * Handles user login.
+     *
+     * @param Context   HTML context from the client request.
+     */
+    private static void handleLoginPost(Context ctx) {
         try {
             int gNumber = Integer.parseInt(Objects.requireNonNull(ctx.formParam("gnumber")));
             Student student = dc.students.get(gNumber);
