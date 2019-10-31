@@ -1,11 +1,9 @@
 import io.javalin.Javalin;
 import io.javalin.http.Context;
-import io.javalin.plugin.rendering.JavalinRenderer;
 
-import java.time.*;
 import java.util.*;
 
-public class AwesomeWebApp {
+public class HoursFinder {
 
     // For getting all of our data
     private static DatabaseConnector dc = new DatabaseConnector();
@@ -22,7 +20,7 @@ public class AwesomeWebApp {
 
         // User login handler.
         app.post("/login", // TODO: store name in database
-                AwesomeWebApp::handleLogin);
+                HoursFinder::handleLogin);
 
     }
 
