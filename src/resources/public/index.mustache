@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Reservation system</title>
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body style="text-align:center">
 
@@ -16,6 +16,12 @@
     <br><br>
     <button>Login</button>
 </form>
+<br>
+{{#error}}
+<div class="w3-panel w3-red">
+    {{error}}
+</div>
+{{/error}}
 
 </body>
 </html>

@@ -3,15 +3,15 @@ import java.util.List;
 import java.util.Objects;
 
 class SchoolClass {
-    public final String name;
-    public final String roomNumber;
-    public final List<DayOfWeek> days;
-    public final LocalTime startTime;
-    public final LocalTime endTime;
+    final String name;
+    final String room;
+    final List<DayOfWeek> days;
+    final LocalTime startTime;
+    final LocalTime endTime;
 
-    public SchoolClass(String name, String roomNumber, List<DayOfWeek> days, LocalTime startTime, LocalTime endTime) {
+    SchoolClass(String name, String room, List<DayOfWeek> days, LocalTime startTime, LocalTime endTime) {
         this.name = name;
-        this.roomNumber = roomNumber;
+        this.room = room;
         this.days = days;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -21,7 +21,7 @@ class SchoolClass {
     public String toString() {
         return "SchoolClass{" +
                 "name='" + name + '\'' +
-                ", roomNumber='" + roomNumber + '\'' +
+                ", room='" + room + '\'' +
                 ", days=" + days +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
@@ -34,7 +34,7 @@ class SchoolClass {
         if (o == null || getClass() != o.getClass()) return false;
         SchoolClass that = (SchoolClass) o;
         return Objects.equals(name, that.name) &&
-                Objects.equals(roomNumber, that.roomNumber) &&
+                Objects.equals(room, that.room) &&
                 Objects.equals(days, that.days) &&
                 Objects.equals(startTime, that.startTime) &&
                 Objects.equals(endTime, that.endTime);
@@ -42,7 +42,7 @@ class SchoolClass {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, roomNumber, days, startTime, endTime);
+        return Objects.hash(name, room, days, startTime, endTime);
     }
 }
 

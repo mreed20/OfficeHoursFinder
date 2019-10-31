@@ -1,50 +1,55 @@
 import io.javalin.Javalin;
+import io.javalin.http.Context;
+import io.javalin.plugin.rendering.JavalinRenderer;
 
 import java.time.*;
 import java.util.*;
 
 public class AwesomeWebApp {
 
-    static Map<Integer, SchoolClass> users = new Hashtable<>();
+    // For getting all of our data
+    private static DatabaseConnector dc = new DatabaseConnector();
 
     public static void main(String[] args) {
-
-        users.put(1125901,
-                new SchoolClass("CS321",
-                        "Expl L003",
-                        Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.FRIDAY),
-                        LocalTime.of(12, 0),
-                        LocalTime.of(13, 15)));
-
-        users.put(1234567,
-                new SchoolClass("CS306",
-                        "ENGR 2901",
-                        Arrays.asList(DayOfWeek.TUESDAY),
-                        LocalTime.of(16, 0),
-                        LocalTime.of(18, 30)));
 
         Javalin app = Javalin.create(config ->
                 config.addStaticFiles("/public")
         ).start(7000);
 
+        // Home page handler.
+        // TODO: unecessary?
+        app.get("/", ctx -> ctx.render("/index.mustache"));
 
-        app.post("/login", ctx -> {
-            String gNumber = ctx.formParam("gnumber");
-            try {
-                int userId = Integer.parseInt(gNumber);
-                if (users.containsKey(userId)) {
-                    ctx.html("Logged in<br>Your schedules are: " + users.get(userId).toString());
-                } else {
-                    ctx.html(linkToIndex("No user found, click here to go back to login page"));
-                }
-            } catch (NumberFormatException e) {
-                ctx.html(linkToIndex("Number format exception: " + e.getMessage()));
+        // User login handler.
+        app.post("/login", // TODO: store name in database
+                AwesomeWebApp::handleLogin);
+
+    }
+
+    private static void handleLogin(Context ctx) {
+        try {
+            int gNumber = Integer.parseInt(Objects.requireNonNull(ctx.formParam("gnumber")));
+            Student student = dc.students.get(gNumber);
+            if (student != null) {
+                SchoolClass sc = student.classes.get(0);
+                ctx.render("/loginMessage.mustache",
+                        Map.of(
+                                "username", student.name,
+                                "classname", sc.name,
+                                "room", sc.room,
+                                "days", sc.days,
+                                "time", sc.startTime + " - " + sc.endTime
+                        )
+                );
+            } else {
+                ctx.render("/index.mustache",
+                        Map.of("error", "User not found in the database")
+                );
             }
-        });
+        } catch (NumberFormatException e) {
+            ctx.render("/index.mustache",
+                    Map.of("error", "Invalid input")
+            );
+        }
     }
-
-    private static String linkToIndex(String html) {
-        return "<a href='index.html'>" + html + "</a>";
-    }
-
 }
