@@ -11,7 +11,8 @@ public class HoursFinder {
     public static void main(String[] args) {
 
         Javalin app = Javalin.create(config ->
-                config.addStaticFiles("/public")
+                // Needed for CSS files.
+                config.addStaticFiles("/")
         ).start(7000);
 
         // Home page handler.
