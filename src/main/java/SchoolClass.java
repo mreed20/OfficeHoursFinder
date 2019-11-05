@@ -16,6 +16,18 @@ class SchoolClass {
         this.startTime = startTime;
         this.endTime = endTime;
     }
+    
+    public List<DayOfWeek> getDays() {
+    	return this.days;
+    }
+    
+    public LocalTime getStart() {
+    	return this.startTime;
+    }
+    
+    public LocalTime getEnd() {
+    	return this.endTime;
+    }
 
     @Override
     public String toString() {

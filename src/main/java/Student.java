@@ -11,6 +11,10 @@ class Student {
         this.classes = classes;
     }
 
+    public List<SchoolClass> getClasses(){
+    	return this.classes;
+    }
+    
     @Override
     public String toString() {
         return "Student{" +
