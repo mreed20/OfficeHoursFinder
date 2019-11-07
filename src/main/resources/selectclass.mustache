@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Select class</title>
+    <link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body style="text-align:center">
+<form class="w3-container"  action="/class_select" method="post">
+    <h2>Hi {{username}}</h2>
+    <h3>Select a class to generate hours for.</h2>
+    {{#classes}}
+        <p>
+            <input class="w3-radio" type="radio" name="class"
+                   value="{{class}}">
+            <label>{{class}}</label>
+        </p>
+    {{/classes}}
+    <br>
+    <button class="w3-btn">Submit</button>
+</form>
+
+</body>
+</html>
