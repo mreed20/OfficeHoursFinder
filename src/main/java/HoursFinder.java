@@ -1,15 +1,24 @@
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
+import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class HoursFinder {
 
     // For getting all of our data
-    private static DatabaseConnector dc = new DatabaseConnector();
+    private static DatabaseConnector dc;
 
     public static void main(String[] args) {
+
+        try {
+            dc = new DatabaseConnector();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+            System.exit(1);
+        }
 
         Javalin app = Javalin.create(config ->
                 // Needed for CSS files.
@@ -17,7 +26,7 @@ public class HoursFinder {
         ).start(7000);
 
         // Home page handler.
-        app.get("/", ctx -> ctx.render("/index.mustache"));
+        app.get("/", ctx -> ctx.render("/index.mustache")); //This is a listener, when we enter the website, this is the first file that gets rendered
 
         // User login handler.
         app.post("/login", HoursFinder::handleLoginPost);
@@ -58,7 +67,7 @@ public class HoursFinder {
         for (SchoolClass c : sortClasses(classes)) {
             String s = "<tr>";
             s += stringToHtmlRow(c.name);
-            s += stringToHtmlRow(c.room);
+            //s += stringToHtmlRow(c.room);
             s += stringToHtmlRow(c.days.toString());
             s += stringToHtmlRow(c.startTime + " - " + c.endTime);
             s += "</tr>";
