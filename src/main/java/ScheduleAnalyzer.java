@@ -20,13 +20,14 @@ public class ScheduleAnalyzer<availableStudents> {
 		Map<TimeSlot, List<Student>> availableStudents = new HashMap<>();
 		for(TimeSlot hour : hours)
 		{
-			ArrayList<Student> available = new ArrayList<>();
+			List<Student> available = new ArrayList<>();
 			int i = dayToInt(hour.getDay());
 			int start = localTimeToIndex(hour.getStartTime());
 			int end = localTimeToIndex(hour.getEndTime());
 			// the end-1 is related to 30 minute intervals
 			for(int j = start; j<end-1; j++) {
-				for(Student student : availableStudents[i][j]) {
+				// TODO: this is broke, it used to say availableStudents[i][j]
+				for(Student student : availableStudents.get(i)) {
 					if(!available.contains(student)) {
 						available.add(student);
 					}

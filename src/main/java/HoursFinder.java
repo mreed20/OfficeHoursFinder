@@ -13,7 +13,10 @@ public class HoursFinder {
     public static void main(String[] args) {
 
         try {
-            dc = new DatabaseConnector();
+            final String url = "jdbc:postgresql://localhost:5432/postgres";
+            final String username = "postgres";
+            final String password = "postgresqlmasterpassword";
+            dc = new DatabaseConnector(url, username, password);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
