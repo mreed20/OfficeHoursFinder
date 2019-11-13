@@ -1,0 +1,4 @@
+Go to this website and follow the instructions. It is a good process and it even has pictures of the steps incase you wondered how to the loading screens would look like.
+https://www.guru99.com/download-install-postgresql.html
+
+I will attach the postgresqlJDBC jar files separately
