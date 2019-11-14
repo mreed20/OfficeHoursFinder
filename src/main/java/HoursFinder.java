@@ -105,14 +105,15 @@ public class HoursFinder {
     private static void handleLoginPost(Context ctx) {
         try {
             int gNumber = Integer.parseInt(Objects.requireNonNull(ctx.formParam("gnumber")));
-            Student student = dc.students.get(gNumber);
-            if (student != null) {
+            Teacher teacher = dc.getTeachers().get(gNumber);
+            //Student student = dc.students.get(gNumber);
+            if (teacher != null) {
 
                 // Build a model which mustache will parse.
                 Map<String, Object> model = new HashMap<>();
-                model.put("username", student.name);
+                model.put("username", teacher.name);
                 // TODO: this line of code gave me cancer, but it works
-                model.put("classes", student.classes.stream()
+                model.put("classes", teacher.classes_taught.stream()
                                                     .map(c -> c.name)
                                                     .map(name -> Map.of("class", name))
                                                     .collect(Collectors.toList()));

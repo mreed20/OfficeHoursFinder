@@ -8,7 +8,8 @@ class DatabaseConnector {
 
     private final List<SchoolClass> classes = new ArrayList<>();
     // TODO: make this private
-    public final Map<Integer, Student> students = new HashMap<>();
+    private Map<Integer, Student> students = new HashMap<>();
+    private Map<Integer, Teacher> teachers = new HashMap<>();
 
 
     DatabaseConnector(String url, String username, String password) throws SQLException {
@@ -64,5 +65,34 @@ class DatabaseConnector {
 
             students.put(gnum, new Student(Integer.toString(gnum), student_classes)); //adds a new student object to the s list
         }
+
+        rs = statement.executeQuery("select distinct gnumber, name from public.teachers"); //gets all the distinct teachers
+        while (rs.next()) {
+
+            int gnum = rs.getInt("gnumber"); //gets the gnumber
+            String teach_name = rs.getString("name");
+
+            ResultSet rs1 = statement1.executeQuery("select classes_teaching from public.teachers where gnumber = " + gnum);//gets the classes of a student,
+            List<SchoolClass> teacher_classes = new ArrayList<>(); //a list of all classes belonging to a student
+
+            while (rs1.next()) {
+
+                String classname = rs1.getString("classes_teaching");//gets the class name
+
+                for (SchoolClass aClass : classes) {
+
+                    //finds that class in the classes list and adds it to the student_classes list
+                    if (aClass.name.equals(classname)) {
+                        teacher_classes.add(aClass);
+                    }
+                }
+            }
+
+            teachers.put(gnum, new Teacher(teach_name, gnum, teacher_classes)); //adds a new student object to the s list
+        }
+    }
+
+    public Map<Integer, Teacher> getTeachers(){
+        return this.teachers;
     }
 }
