@@ -3,28 +3,45 @@ import java.util.*;
 
 
 public class ScheduleAnalyzer {
-	final List<Student> students;
-	final List<TimeSlot> hours;
+	//students contains list of all students in this class
+	private final List<Student> students;
+	//hours contains list of all possible office hours
+	private final List<TimeSlot> hours;
+	//Contains list of students at every 15 minute interval who are available for next 30 minutes
 	private List<Student>[][] availableStudents;
+	//chosenHours contains the TimeSlots that have been selected by the user for his/her office hours
 	private List<TimeSlot> chosenHours;
+	//Pairings of TimeSlots and the corresponding list of available students for that office hour
 	private Map<TimeSlot, List<Student>> initialHours;
 	private final int NUMDAYS = 5;
 	private final int NUMINTERVALS = 4 * 24;
 
-	/* public static void main(String[] args)
+	/*
+	public static void main(String[] args)
 	{
 		List<SchoolClass> classes1 = new ArrayList<SchoolClass>();
 		List<SchoolClass> classes2 = new ArrayList<SchoolClass>();
+		List<SchoolClass> classes3 = new ArrayList<SchoolClass>();
+		List<SchoolClass> classes4 = new ArrayList<SchoolClass>();
 		List<DayOfWeek> List1 = new ArrayList<DayOfWeek>();
 		List1.add(DayOfWeek.TUESDAY);
-		classes1.add(new SchoolClass("CS321", List1, LocalTime.of(12, 0, 0), LocalTime.of(13,15,0)));
-		classes2.add(new SchoolClass("CS484", List1, LocalTime.of(13, 0, 0), LocalTime.of(14,15,0)));
+		SchoolClass CS321 = new SchoolClass("CS321", List1, LocalTime.of(12, 0, 0), LocalTime.of(13,15,0));
+		SchoolClass CS484 = new SchoolClass("CS484", List1, LocalTime.of(13, 0, 0), LocalTime.of(14,15,0));
+		classes1.add(CS321);
+		classes2.add(CS484);
+		classes3.add(CS321);
+		classes3.add(CS484);
 		List<Student> students = new ArrayList<Student>();
 		students.add(new Student("Kiwoong", classes1));
 		students.add(new Student("Avi", classes1));
 		students.add(new Student("Michael", classes1));
+		students.add(new Student("Serral", classes1));
 		students.add(new Student("Frank", classes2));
 		students.add(new Student("Scott", classes2));
+		students.add(new Student("Bob", classes3));
+		students.add(new Student("Matt", classes3));
+		students.add(new Student("Bob", classes4));
+		students.add(new Student("Matt", classes4));
 
 		List<TimeSlot> times = new ArrayList<TimeSlot>();
 		times.add(new TimeSlot(DayOfWeek.TUESDAY, LocalTime.of(12, 0, 0), LocalTime.of(13,30,0)));
@@ -42,56 +59,68 @@ public class ScheduleAnalyzer {
 		}
 		schedule.setOfficeHour(bestTime.getTimeSlot());
 		hours = schedule.buildGeneratedHours();
+		System.out.println();
 		for(GeneratedHour hour : hours)
 		{
 			System.out.printf("%.2f %s %s\n", hour.getAvailPercent(), hour.getTimeSlot().getStartTime(), hour.getTimeSlot().getEndTime());
 		}
-	} */
+	}
 
+
+	 */
 	@SuppressWarnings("unchecked")
 	public ScheduleAnalyzer(List<Student> students, List<TimeSlot> hours) {
 		this.students = students;
 		this.hours = hours;
 		this.chosenHours = new ArrayList<>();
 		this.availableStudents = new ArrayList[5][96];
-		for(int i = 0; i < NUMDAYS; i++)
-		{
-			for(int j = 0; j < NUMINTERVALS; j++)
-			{
+		//Initialize each location in availableStudents with an arrayList
+		for(int i = 0; i < NUMDAYS; i++) {
+			for (int j = 0; j < NUMINTERVALS; j++) {
 				availableStudents[i][j] = new ArrayList<>();
 			}
 		}
+		//Builds the lists in availableStudents to hold who is available over next 30 minutes
 		buildAvailableStudents();
+		//For each time slot, calculates who can attend
 		this.initialHours = calculateAvailabilities();
 	}
 
+	/*Primary method to be called after constructor. Returns a list of the GeneratedHour class.
+	  The availablityPercentages calculated are dependent on if chosenHours is empty or not.
+	  If other hours have been chosen, then the percentages calculated here ignore the students
+	  who can attend those office hours.
+	 */
 	public List<GeneratedHour> buildGeneratedHours()
 	{
+		//Create a list of students who are unable to go to an office hour, and the list of students who can attend
 		List<Student> students;
+		List<Student> alreadyAvail = new ArrayList<>();
+		//If there haven't been any office hours chosen, then all students are used
 		if(chosenHours.size() == 0)
 			students = this.students;
+		/*Otherwise, we remove the students who can attend any of the chosenHours from the overall list of students
+		And add the students who can attend any of the chosenHours to alreadyAvail
+		 */
 		else {
 			students = new ArrayList<>(this.students);
 			for(TimeSlot t : chosenHours) {
 				students.removeAll(initialHours.get(t));
-			}
-		}
-
-		List<Student> alreadyAvail = new ArrayList<>();
-		if(this.chosenHours.size() != 0)
-		{
-			for(TimeSlot t : chosenHours) {
 				alreadyAvail.addAll(initialHours.get(t));
 			}
 		}
 
 		List<GeneratedHour> generatedHours = new ArrayList<>();
 
+		//If there are already office hours chosen
 		if(chosenHours.size() != 0)
 		{
 			for(TimeSlot t : this.hours)
 			{
+				//Skip TimeSlots that are already chosen
 				if(!chosenHours.contains(t)) {
+					//Gets the original list of students who could attend a given timeSlot and removes the students
+					//Who are already available to go to a chosen office hour
 					List<Student> studentsAvailable = new ArrayList<>(initialHours.get(t));
 					studentsAvailable.removeAll(alreadyAvail);
 					float availPercent = ((float)(studentsAvailable.size()))/students.size();
@@ -100,6 +129,7 @@ public class ScheduleAnalyzer {
 			}
 			return generatedHours;
 		}
+		//If there have been no office hours chosen
 		else
 		{
 			for(TimeSlot t : this.hours)
@@ -111,6 +141,7 @@ public class ScheduleAnalyzer {
 		}
 	}
 
+	//For each TimeSlot in hours, this method calculates which students can attend an office hour during that TimeSlot
 	public Map<TimeSlot, List<Student>> calculateAvailabilities() {
 
 		List<Student> alreadyAvail = new ArrayList<>();
@@ -165,6 +196,9 @@ public class ScheduleAnalyzer {
 		}
 	}
 
+	/*Adds a specified TimeSlot into the list of chosenHours. Adding a member to chosenHours will affect future calls
+	* of buildGeneratedHours.
+	* */
 	public void setOfficeHour(TimeSlot t)
 	{
 		this.chosenHours.add(t);
