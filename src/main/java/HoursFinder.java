@@ -105,8 +105,7 @@ public class HoursFinder {
     private static void handleLoginPost(Context ctx) {
         try {
             int gNumber = Integer.parseInt(Objects.requireNonNull(ctx.formParam("gnumber")));
-            Teacher teacher = dc.getTeachers().get(gNumber);
-            //Student student = dc.students.get(gNumber);
+            Teacher teacher = dc.getTeacher(gNumber);
             if (teacher != null) {
 
                 // Build a model which mustache will parse.

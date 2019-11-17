@@ -7,7 +7,6 @@ import java.time.format.DateTimeFormatter;
 class DatabaseConnector {
 
     private final List<SchoolClass> classes = new ArrayList<>();
-    // TODO: make this private
     private Map<Integer, Student> students = new HashMap<>();
     private Map<Integer, Teacher> teachers = new HashMap<>();
 
@@ -92,7 +91,7 @@ class DatabaseConnector {
         }
     }
 
-    public Map<Integer, Teacher> getTeachers(){
-        return this.teachers;
+    Teacher getTeacher(int gNumber) {
+        return this.teachers.get(gNumber);
     }
 }
