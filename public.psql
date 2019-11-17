@@ -1,0 +1,217 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 12.1
+-- Dumped by pg_dump version 12.1
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: adminpack; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS adminpack WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION adminpack; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION adminpack IS 'administrative functions for PostgreSQL';
+
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: classes; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.classes (
+    class_name character varying(20) NOT NULL,
+    days text[] NOT NULL,
+    starttime time without time zone NOT NULL,
+    endtime time without time zone NOT NULL
+);
+
+
+ALTER TABLE public.classes OWNER TO postgres;
+
+--
+-- Name: students; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.students (
+    gnumber integer NOT NULL,
+    classes character varying(20) NOT NULL
+);
+
+
+ALTER TABLE public.students OWNER TO postgres;
+
+--
+-- Name: teachers; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.teachers (
+    name character varying(20) NOT NULL,
+    gnumber integer NOT NULL,
+    classes_teaching character varying(20) NOT NULL
+);
+
+
+ALTER TABLE public.teachers OWNER TO postgres;
+
+--
+-- Data for Name: classes; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.classes (class_name, days, starttime, endtime) FROM stdin;
+CS465	{Thursday}	04:30:00	07:10:00
+CS471	{Monday,Wednesday}	01:30:00	02:45:00
+CS480	{Monday,Wednesday}	09:00:00	10:45:00
+CS321	{Tuesday,Thursday}	01:30:00	02:45:00
+CS491	{Friday}	01:30:00	04:10:00
+CS483	{Tuesday,Thursday}	09:00:00	10:15:00
+SWE432	{Wednesday}	04:30:00	07:10:00
+ENGH388	{Monday,Wednesday,Friday}	10:00:00	11:15:00
+STAT344	{Monday,Wednesday}	04:30:00	05:45:00
+BUS100	{Tuesday,Thursday}	10:30:00	11:45:00
+\.
+
+
+--
+-- Data for Name: students; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.students (gnumber, classes) FROM stdin;
+1009180	CS465
+1009180	CS321
+1009180	CS471
+2164344	CS465
+2164344	CS471
+9122093	CS471
+9211586	CS480
+9211586	CS465
+9122093	CS480
+9122093	CS465
+9351268	CS465
+9351268	CS480
+3978863	CS321
+3591772	CS321
+7818208	CS321
+3921190	CS471
+9211586	CS471
+7818208	CS471
+1009180	CS480
+1009180	CS491
+841650	CS465
+841650	CS321
+841650	SWE432
+841650	STAT344
+6891872	CS465
+6891872	CS321
+2729976	STAT344
+2729976	CS471
+2729976	CS483
+2729976	SWE432
+2729976	ENGH388
+2963811	STAT344
+2963811	CS321
+2963811	BUS100
+3787976	CS471
+3787976	CS321
+3787976	BUS100
+3787976	ENGH388
+1422540	CS483
+1422540	CS491
+2410065	CS465
+2410065	CS491
+2410065	BUS100
+4483864	CS321
+4483864	CS465
+39554260	SWE432
+39554260	CS321
+39554260	STAT344
+3608731	SWE432
+\.
+
+
+--
+-- Data for Name: teachers; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.teachers (name, gnumber, classes_teaching) FROM stdin;
+John Smith	1	CS465
+John Smith	1	CS483
+Jane Doe	2	STAT344
+Jane Doe	2	CS471
+Jane Doe	2	ENGH388
+Austin Tyler	5	BUS100
+Austin Tyler	5	SWE432
+Zlatan Merkel	6	CS465
+Zlatan Merkel	6	CS321
+Zlatan Merkel	6	ENGH388
+Bastian Creed	7	CS483
+Bastian Creed	7	BUS100
+Bob Dole	3	CS491
+Bob Dole	3	CS321
+Barack Obama	4	CS480
+\.
+
+
+--
+-- Name: classes classes_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.classes
+    ADD CONSTRAINT classes_pkey PRIMARY KEY (class_name);
+
+
+--
+-- Name: students students_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.students
+    ADD CONSTRAINT students_pkey PRIMARY KEY (gnumber, classes);
+
+
+--
+-- Name: teachers teachers_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.teachers
+    ADD CONSTRAINT teachers_pkey PRIMARY KEY (gnumber, classes_teaching);
+
+
+--
+-- Name: students students_classes_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.students
+    ADD CONSTRAINT students_classes_fkey FOREIGN KEY (classes) REFERENCES public.classes(class_name);
+
+
+--
+-- Name: teachers teachers_classes_taught_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.teachers
+    ADD CONSTRAINT teachers_classes_taught_fkey FOREIGN KEY (classes_teaching) REFERENCES public.classes(class_name);
+
+
+--
+-- PostgreSQL database dump complete
+--
+

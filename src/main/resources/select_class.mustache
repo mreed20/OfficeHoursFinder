@@ -2,17 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Select class</title>
+    <title>HoursFinder - Select class</title>
     <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body style="text-align:center">
-<form class="w3-container"  action="/class_select" method="post">
+<form class="w3-container"  action="/select_class" method="post">
     <h2>Hi {{username}}</h2>
-    <h3>Select a class to generate hours for.</h2>
+    <h3>Select a class to generate hours for.</h3>
     {{#classes}}
         <p>
             <input class="w3-radio" type="radio" name="class"
-                   value="{{class}}">
+                   value="{{class}}" required>
             <label>{{class}}</label>
         </p>
     {{/classes}}

@@ -1,0 +1,30 @@
+# WINDOWS
+
+Go to this website and follow the instructions. It is a good process and it
+even has pictures of the steps incase you wondered how to the loading screens
+would look like.
+
+	https://www.guru99.com/download-install-postgresql.html
+
+# MAC
+
+Download and install this: https://postgresapp.com
+
+
+# SETTING UP DATABASE
+
+After installing Postgres SQL, you should have the command `psql` available in
+your terminal.  To load the `teacher`, `student`, and `classes` tables into
+your database follow these steps:
+
+1. Start Postgres SQL. It should use the hostname `localhost` and port `5432`
+   by default.
+
+2. Open a terminal.
+
+3. Navigate (via `cd`) to the directory containing the file `public.sql`
+
+4. Load public.sql into your database with the command `psql -h localhost
+   public < public.sql`. It is important to not change `public` to anything
+   else, since the Java code assumes that all tables (e.g., `teacher`) are in
+   the `public` database.
