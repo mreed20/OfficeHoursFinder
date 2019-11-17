@@ -18,25 +18,74 @@ public class HoursFinder {
             final String password = "postgresqlmasterpassword";
             dc = new DatabaseConnector(url, username, password);
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
+            System.err.println(e.getMessage());
             System.exit(1);
         }
 
         Javalin app = Javalin.create(config ->
-                // Needed for CSS files.
+                // Tells server about our CSS files.
                 config.addStaticFiles("/")
         ).start(7000);
 
-        // Home page handler.
-        app.get("/", ctx -> ctx.render("/index.mustache")); //This is a listener, when we enter the website, this is the first file that gets rendered
+        // Home page handler, which gets executed when we first visit the website
+        // since we will be at the root directory ("/").
+        app.get("/", ctx -> ctx.render(Paths.MUSTACHE_INDEX));
+
 
         // User login handler.
-        app.post("/login", HoursFinder::handleLoginPost);
+        app.post("/login", ctx -> {
+                    try {
+                        int gNumber = Integer.parseInt(ctx.formParam("gnumber"));
+                        Teacher teacher = dc.getTeacher(gNumber);
+                        if (teacher != null) {
+                            renderSelectClass(ctx, teacher);
+                        } else {
+                            ctx.render(Paths.MUSTACHE_INDEX, ErrorMaps.USER_NOT_FOUND);
+                        }
+                    } catch (NumberFormatException e) {
+                        ctx.render(Paths.MUSTACHE_INDEX, ErrorMaps.INVALID_INPUT);
+                    }
+                }
+        );
 
         // Class selection handler.
-        app.post("/class_select", HoursFinder::handleSelectClassPost);
+        app.post("/select_class", ctx -> {
+                    String selection = ctx.formParam("class");
+                    // This assertion should never trigger because the radio buttons in `select_class.mustache`
+                    // have the `required` attribute, meaning that at least one radio button must be selected
+                    // before the browser submits the form.
+                    assert selection != null;
+                    ctx.render(Paths.MUSTACHE_SELECT_AVAILABILITY);
+                }
+        );
 
+        // Availability selection handler.
+        app.post("/select_availability", ctx -> {
+                    String selection = ctx.formParam("length");
+                    assert selection != null;
+                    ctx.html(selection);
+                }
+        );
+
+    }
+
+
+    private static void renderSelectClass(Context ctx, Teacher teacher) {
+        // Build a model which mustache will parse.
+        Map<String, Object> model = new HashMap<>();
+        model.put("username", teacher.name);
+        model.put("classes", classesToMap(teacher.classes_taught));
+
+        // Render the mustache file with the given model.
+        ctx.render(Paths.MUSTACHE_SELECT_CLASS, model);
+    }
+
+    private static List<Map<String, String>> classesToMap(List<SchoolClass> classes) {
+        // TODO: this line of code gave me cancer, but it works
+        return classes.stream()
+                .map(c -> c.name)
+                .map(name -> Map.of("class", name))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -44,10 +93,10 @@ public class HoursFinder {
      */
     private static List<SchoolClass> sortClasses(List<SchoolClass> classes) {
         Comparator<SchoolClass> comp = Comparator.comparing(c -> c.days.get(0));
-        comp = comp.thenComparing(Comparator.comparing(c -> c.startTime));
+        comp = comp.thenComparing(c -> c.startTime);
         return classes.stream()
-                       .sorted(comp)
-                       .collect(Collectors.toList());
+                .sorted(comp)
+                .collect(Collectors.toList());
     }
 
 
@@ -70,7 +119,6 @@ public class HoursFinder {
         for (SchoolClass c : sortClasses(classes)) {
             String s = "<tr>";
             s += stringToHtmlRow(c.name);
-            //s += stringToHtmlRow(c.room);
             s += stringToHtmlRow(c.days.toString());
             s += stringToHtmlRow(c.startTime + " - " + c.endTime);
             s += "</tr>";
@@ -80,52 +128,4 @@ public class HoursFinder {
     }
 
 
-    /**
-     * Handles class selection.
-     *
-     * @param ctx   HTML context from the client request.
-     */
-    private static void handleSelectClassPost(Context ctx) {
-        // TODO: handle not selecting anything... or just preselect something
-        String selection = ctx.formParam("class");
-        if (selection == null) {
-            ctx.html("<b>SHOULD HAVE SELECTED SOMETHING WHEN U HAD THE CHANCE LOL</b>");
-        } else {
-            ctx.render("/generatehours.mustache",
-                    Map.of("class", selection));
-        }
-    }
-
-
-    /**
-     * Handles user login.
-     *
-     * @param ctx   HTML context from the client request.
-     */
-    private static void handleLoginPost(Context ctx) {
-        try {
-            int gNumber = Integer.parseInt(Objects.requireNonNull(ctx.formParam("gnumber")));
-            Teacher teacher = dc.getTeacher(gNumber);
-            if (teacher != null) {
-
-                // Build a model which mustache will parse.
-                Map<String, Object> model = new HashMap<>();
-                model.put("username", teacher.name);
-                // TODO: this line of code gave me cancer, but it works
-                model.put("classes", teacher.classes_taught.stream()
-                                                    .map(c -> c.name)
-                                                    .map(name -> Map.of("class", name))
-                                                    .collect(Collectors.toList()));
-                ctx.render("/selectclass.mustache", model);
-            } else {
-                ctx.render("/index.mustache",
-                        Map.of("error", "User not found in the database")
-                );
-            }
-        } catch (NumberFormatException e) {
-            ctx.render("/index.mustache",
-                    Map.of("error", "Invalid input")
-            );
-        }
-    }
 }

@@ -2,21 +2,20 @@ import java.time.*;
 import java.util.*;
 
 
-public class ScheduleAnalyzer {
+class ScheduleAnalyzer {
 	//students contains list of all students in this class
 	private final List<Student> students;
 	//hours contains list of all possible office hours
 	private final List<TimeSlot> hours;
 	//Contains list of students at every 15 minute interval who are available for next 30 minutes
-	private List<Student>[][] availableStudents;
+	private final List<Student>[][] availableStudents;
 	//chosenHours contains the TimeSlots that have been selected by the user for his/her office hours
-	private List<TimeSlot> chosenHours;
+	private final List<TimeSlot> chosenHours;
 	//Pairings of TimeSlots and the corresponding list of available students for that office hour
-	private Map<TimeSlot, List<Student>> initialHours;
+	private final Map<TimeSlot, List<Student>> initialHours;
 	private final int NUMDAYS = 5;
 	private final int NUMINTERVALS = 4 * 24;
 
-	/*
 	public static void main(String[] args)
 	{
 		List<SchoolClass> classes1 = new ArrayList<SchoolClass>();
@@ -67,7 +66,6 @@ public class ScheduleAnalyzer {
 	}
 
 
-	 */
 	@SuppressWarnings("unchecked")
 	public ScheduleAnalyzer(List<Student> students, List<TimeSlot> hours) {
 		this.students = students;
@@ -142,7 +140,7 @@ public class ScheduleAnalyzer {
 	}
 
 	//For each TimeSlot in hours, this method calculates which students can attend an office hour during that TimeSlot
-	public Map<TimeSlot, List<Student>> calculateAvailabilities() {
+	private Map<TimeSlot, List<Student>> calculateAvailabilities() {
 
 		List<Student> alreadyAvail = new ArrayList<>();
 		if(this.chosenHours.size() != 0)
@@ -196,9 +194,10 @@ public class ScheduleAnalyzer {
 		}
 	}
 
-	/*Adds a specified TimeSlot into the list of chosenHours. Adding a member to chosenHours will affect future calls
-	* of buildGeneratedHours.
-	* */
+	/*
+	 * Adds a specified TimeSlot into the list of chosenHours. Adding a member to chosenHours will affect future calls
+	 * of buildGeneratedHours.
+	 */
 	public void setOfficeHour(TimeSlot t)
 	{
 		this.chosenHours.add(t);
@@ -206,18 +205,16 @@ public class ScheduleAnalyzer {
 
 	public float getTotalAvailPercent()
 	{
-		List<Student> availableStudents = new ArrayList<>();
-		if(chosenHours.size() == 0) {return -1;}
-		else{
-			for(TimeSlot t : chosenHours)
-			{
-				availableStudents.removeAll(initialHours.get(t));
-				availableStudents.addAll(initialHours.get(t));
-			}
+		if(chosenHours.size() == 0) throw new RuntimeException();
 
-			return (((float)(availableStudents.size()))/this.students.size());
+		List<Student> availableStudents = new ArrayList<>();
+		for(TimeSlot t : chosenHours)
+		{
+			availableStudents.removeAll(initialHours.get(t));
+			availableStudents.addAll(initialHours.get(t));
 		}
 
+		return ((float)(availableStudents.size())) / this.students.size();
 	}
 
 	/**
