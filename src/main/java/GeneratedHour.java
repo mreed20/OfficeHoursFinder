@@ -1,21 +1,30 @@
-public class GeneratedHour {
+class GeneratedHour {
 
     final private float availPercent;
     final private TimeSlot t;
 
-    public GeneratedHour(float availPercent, TimeSlot t)
+    GeneratedHour(float availPercent, TimeSlot t)
     {
         this.availPercent = availPercent;
         this.t = t;
     }
 
-    public float getAvailPercent()
+    float getAvailPercent()
     {
         return this.availPercent;
     }
 
-    public TimeSlot getTimeSlot()
+    TimeSlot getTimeSlot()
     {
         return this.t;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "GeneratedHour{" +
+                "availPercent=" + availPercent +
+                ", t=" + t +
+                '}';
     }
 }
