@@ -2,7 +2,13 @@ import io.javalin.Javalin;
 import io.javalin.http.Context;
 
 import java.sql.SQLException;
+import java.time.DayOfWeek;
+import java.time.Duration;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class HoursFinder {
@@ -65,15 +71,33 @@ public class HoursFinder {
 
         // Availability selection handler.
         app.post("/select_availability", ctx -> {
-                    String selection = ctx.formParam("length");
-                    assert selection != null;
-                    // check-m
-                    // check-tu
-                    // check-w
-                    // check-tr
-                    // check-f
-                    // length
-                    renderDisplayGeneratedHours(ctx);
+                    // Get provided schedule from the HTML POST, which contains information about which
+                    // boxes the user checked (the form parameter will be non-null if the box is checked).
+                    List<TimeSlot> schedule = new ArrayList<>();
+                    for (String key : new String[]{"m", "tu", "w", "tr", "f"}) {
+                        if (ctx.formParam(key) != null) {
+                            // The user said they are free on this day, so make them available
+                            // from 8:00 am to 10:00 pm.
+                            TimeSlot t = new TimeSlot(
+                                    strToDayOfWeek(key),
+                                    LocalTime.of(8, 0),
+                                    LocalTime.of(22, 0)
+                            );
+                            schedule.add(t);
+                        }
+                    }
+
+                    // Get office hour length.
+                    int minutes = Integer.parseInt(ctx.formParam("length")
+                            .split(" ")[0]);
+                    assert minutes >= 30 && minutes <= 120;
+                    Duration d = Duration.of(minutes, ChronoUnit.MINUTES);
+
+
+                    // Finally generate the requisite time slots needed by ScheduleAnalyzer.
+                    List<TimeSlot> timeSlots = HoursGenerator.genHours(d, schedule);
+                    ctx.html(schedule.toString());
+//                    renderDisplayGeneratedHours(ctx);
                 }
         );
 
@@ -164,5 +188,21 @@ public class HoursFinder {
         return rows;
     }
 
+    private static DayOfWeek strToDayOfWeek(String s)
+    {
+        if (s.equals("m")) {
+            return DayOfWeek.MONDAY;
+        } else if (s.equals("tu")) {
+            return DayOfWeek.TUESDAY;
+        } else if (s.equals("w")) {
+            return DayOfWeek.WEDNESDAY;
+        } else if (s.equals("tr")) {
+            return DayOfWeek.THURSDAY;
+        } else if (s.equals("f")) {
+            return DayOfWeek.FRIDAY;
+        } else {
+            throw new RuntimeException("Failed to convert '" + s + "' to DayOfWeek");
+        }
+    }
 
 }
