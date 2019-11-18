@@ -17,13 +17,13 @@ class HoursGenerator {
         this.hours = new ArrayList<>();
     }
 
-    public List<TimeSlot> genHours(Duration length, List<TimeSlot> schedule) {
+    public List<TimeSlot> genHours(Duration length) {
         //Go through each day 1:Mon ... 5:Fri
         int count = 0;
         for(int i = 1; i < 6; i++) {
             //go through each half hour in the day from 8am to 10pm
             for(int j = eightAM; j < tenPM; j++) {
-                if(isValid(length, schedule, i, j)) {
+                if(isValid(length, i, j)) {
                     hours.add(create(i, j, length));
                 }
             }
@@ -34,7 +34,7 @@ class HoursGenerator {
     /**
      * Helper function to check if that office hour slot is available
      */
-    private boolean isValid(Duration length, List<TimeSlot> schedule, int day, int curTime) {
+    private boolean isValid(Duration length, int day, int curTime) {
         int d = durationToIndex(length);
         LocalTime start = indexToLocalTime(curTime);
         //end time is out of bounds situation
@@ -87,11 +87,8 @@ class HoursGenerator {
         TimeSlot class2 = new TimeSlot(DayOfWeek.FRIDAY,
                 LocalTime.of(8,0),
                 LocalTime.of(22,0));
-
-        List classes = new ArrayList<TimeSlot>();
-        classes.add(class1);
-        classes.add(class2);
-        List<TimeSlot> officeHours = hg.genHours(dur, classes);
+        
+        List<TimeSlot> officeHours = hg.genHours(dur);
 
         for(TimeSlot hour: officeHours) {
             System.out.println(hour);
