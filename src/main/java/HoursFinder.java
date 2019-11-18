@@ -6,9 +6,7 @@ import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class HoursFinder {
@@ -149,59 +147,21 @@ public class HoursFinder {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Sort a list of classes by week, then by start time.
-     */
-    private static List<SchoolClass> sortClasses(List<SchoolClass> classes) {
-        Comparator<SchoolClass> comp = Comparator.comparing(c -> c.days.get(0));
-        comp = comp.thenComparing(c -> c.startTime);
-        return classes.stream()
-                .sorted(comp)
-                .collect(Collectors.toList());
-    }
-
-
-    /**
-     * Convert the string s to an HTML row.
-     */
-    private static String stringToHtmlRow(String s) {
-        return "<td>" + s + "</td>";
-    }
-
-
-    /**
-     * Convert a list of classes to a row in an HTML table.
-     * @param classes  A list of classes.
-     * @return An HTML String made of the concatenation of each class
-     *         represented as an HTML row.
-     */
-    private static List<String> classesToHtmlTableRows(List<SchoolClass> classes) {
-        List<String> rows = new ArrayList<>();
-        for (SchoolClass c : sortClasses(classes)) {
-            String s = "<tr>";
-            s += stringToHtmlRow(c.name);
-            s += stringToHtmlRow(c.days.toString());
-            s += stringToHtmlRow(c.startTime + " - " + c.endTime);
-            s += "</tr>";
-            rows.add(s);
-        }
-        return rows;
-    }
-
     private static DayOfWeek strToDayOfWeek(String s)
     {
-        if (s.equals("m")) {
-            return DayOfWeek.MONDAY;
-        } else if (s.equals("tu")) {
-            return DayOfWeek.TUESDAY;
-        } else if (s.equals("w")) {
-            return DayOfWeek.WEDNESDAY;
-        } else if (s.equals("tr")) {
-            return DayOfWeek.THURSDAY;
-        } else if (s.equals("f")) {
-            return DayOfWeek.FRIDAY;
-        } else {
-            throw new RuntimeException("Failed to convert '" + s + "' to DayOfWeek");
+        switch (s) {
+            case "m":
+                return DayOfWeek.MONDAY;
+            case "tu":
+                return DayOfWeek.TUESDAY;
+            case "w":
+                return DayOfWeek.WEDNESDAY;
+            case "tr":
+                return DayOfWeek.THURSDAY;
+            case "f":
+                return DayOfWeek.FRIDAY;
+            default:
+                throw new IllegalArgumentException("Failed to convert '" + s + "' to DayOfWeek");
         }
     }
 
