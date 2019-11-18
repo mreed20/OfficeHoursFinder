@@ -93,8 +93,8 @@ public class HoursFinder {
 
 
                     // Finally generate the requisite time slots needed by ScheduleAnalyzer.
-                    List<TimeSlot> timeSlots = HoursGenerator.genHours(d, schedule);
-                    ctx.html(schedule.toString());
+                    List<TimeSlot> timeSlots = HoursGenerator.genHours(d);
+                    ctx.html(timeSlots.toString());
 //                    renderDisplayGeneratedHours(ctx);
                 }
         );
