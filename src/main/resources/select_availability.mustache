@@ -5,26 +5,46 @@
     <title>HoursFinder - Select availability</title>
     <link rel="stylesheet" href="style.css" type="text/css">
 </head>
-<body style="text-align:center">
-<div class="w3-container">
-    <form class="w3-container"  action="/select_availability" method="post">
-        <h3>Select when you are available:</h3>
-        <!--    Insert table here from M - F, 6 am through 10 pm-->
+
+<body>
+<div class="w3-display-middle">
+    <form action="/select_availability" method="post">
+
+        <h3>Select available days:</h3>
+
+        <p>
+            <input class="w3-check" type="checkbox" id="check-monday">
+            <label for="check-monday">Monday</label></p>
+
+        <p>
+            <input class="w3-check" type="checkbox" id="check-tuesday">
+            <label for="check-tuesday">Tuesday</label></p>
+
+        <p>
+            <input class="w3-check" type="checkbox" id="check-wednesday">
+            <label for="check-wednesday">Wednesday</label></p>
+
+        <p>
+            <input class="w3-check" type="checkbox" id="check-thursday">
+            <label for="check-thursday">Thursday</label></p>
+
+        <p>
+            <input class="w3-check" type="checkbox" id="check-friday">
+            <label for="check-friday">Friday</label></p>
+
         <br>
-        <label for="length-select">Select your office hours length:</label>
-        <br>
-        <select name="length" id="length-select" required>
+        <h3>Select office hours length:</h3>
+        <select class="w3-select" name="length" id="length-select" required>
             <option value="30">30 minutes</option>
             <option value="45">45 minutes</option>
             <option value="60">60 minutes</option>
-            <option value="75">75 minutes</option>
             <option value="90">90 minutes</option>
-            <option value="105">105 minutes</option>
             <option value="120">120 minutes</option>
         </select>
-        <button class="w3-btn">Generate Hours</button>
+        <br>
+        <br>
+        <button class="w3-btn">Submit</button>
     </form>
 </div>
-
 </body>
 </html>

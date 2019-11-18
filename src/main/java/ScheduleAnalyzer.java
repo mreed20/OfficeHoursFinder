@@ -67,6 +67,8 @@ class ScheduleAnalyzer {
 
 
 	@SuppressWarnings("unchecked")
+	// should take as input a list of students gathered using the DatabaseConnector methods,
+	// and a list of hours taken from the HoursGenerator methods
 	public ScheduleAnalyzer(List<Student> students, List<TimeSlot> hours) {
 		this.students = students;
 		this.hours = hours;

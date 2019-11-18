@@ -6,19 +6,21 @@
     <link rel="stylesheet" href="style.css" type="text/css">
 
 </head>
-<body style="text-align:center">
-<form class="w3-container" action="/login" method="post">
-    <h2>HoursFinder</h2>
-    <h3>Find the best office hours for your students, fast</h3>
-    <input class="w3-input w3-border" type="text" name="gnumber" placeholder="G Number">
-    <br>
-    <button class="w3-btn">Login</button>
-    <br>
-    {{#error}}
-        <div class="w3-panel w3-red">
-            {{error}}
-        </div>
-    {{/error}}
-</form>
+<body>
+<div class="w3-display-middle">
+    <form action="/login" method="post">
+        <h2>HoursFinder</h2>
+        <h3>Find the best office hours, fast</h3>
+        <input class="w3-input w3-border" type="text" name="gnumber" placeholder="G Number">
+        <br>
+        <button class="w3-btn">Login</button>
+        <br>
+        {{#error}}
+            <div class="w3-panel w3-red">
+                {{error}}
+            </div>
+        {{/error}}
+    </form>
+</div>
 </body>
 </html>
