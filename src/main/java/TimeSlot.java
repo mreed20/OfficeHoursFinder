@@ -49,10 +49,4 @@ public class TimeSlot {
         return Objects.hash(day, startTime, endTime);
     }
 
-    @Override
-    public String toString() {
-        String builder = "";
-        builder = "day: " + this.day + " | " + getStartTime() + "-" + getEndTime();
-        return builder;
-    }
 }
