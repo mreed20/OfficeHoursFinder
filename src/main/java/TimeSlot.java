@@ -27,11 +27,11 @@ public class TimeSlot {
     @Override
     public String toString()
     {
-        return "TimeSlot{" +
-                "day=" + day +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
-                '}';
+        return String.format("%s %s - %s",
+                dayOfWeekToString(day),
+                startTime.toString(),
+                endTime.toString()
+        );
     }
 
     @Override
@@ -48,4 +48,22 @@ public class TimeSlot {
     public int hashCode() {
         return Objects.hash(day, startTime, endTime);
     }
+
+
+    private static String dayOfWeekToString(DayOfWeek d) {
+        if (d.equals(DayOfWeek.MONDAY)) {
+            return "M";
+        } else if (d.equals(DayOfWeek.TUESDAY)) {
+            return "Tu";
+        } else if (d.equals(DayOfWeek.WEDNESDAY)) {
+            return "W";
+        } else if (d.equals(DayOfWeek.THURSDAY)) {
+            return "Th";
+        } else if (d.equals(DayOfWeek.FRIDAY)) {
+            return "F";
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
+
 }

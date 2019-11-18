@@ -124,7 +124,7 @@ public class HoursFinder {
 
     private static Map.Entry<String, String> hourToMapEntry(GeneratedHour hour) {
         return new AbstractMap.SimpleEntry<>(
-                hour.getAvailPercent() + "",
+                String.format("%.2f", hour.getAvailPercent()),
                 hour.getTimeSlot().toString()
         );
     }
