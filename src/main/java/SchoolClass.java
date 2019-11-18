@@ -18,22 +18,6 @@ class SchoolClass
         this.endTime = endTime;
     }
 
-    // TODO: all instance variables are final... so why are there getters?
-    List<DayOfWeek> getDays()
-    {
-        return this.days;
-    }
-
-    LocalTime getStart()
-    {
-        return this.startTime;
-    }
-
-    LocalTime getEnd()
-    {
-        return this.endTime;
-    }
-
     @Override
     public String toString()
     {

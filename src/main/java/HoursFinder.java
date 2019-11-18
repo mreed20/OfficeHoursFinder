@@ -9,7 +9,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class HoursFinder
+class HoursFinder
 {
 
     // For getting all of our data
@@ -155,7 +155,7 @@ public class HoursFinder
         // Build a model which mustache will parse.
         Map<String, Object> model = new HashMap<>();
         model.put("username", teacher.name);
-        model.put("classes", classesToMap(teacher.classes_taught));
+        model.put("classes", classesToMap(teacher.classesTaught));
 
         // Render the mustache file with the given model.
         ctx.render(Paths.MUSTACHE_SELECT_CLASS, model);

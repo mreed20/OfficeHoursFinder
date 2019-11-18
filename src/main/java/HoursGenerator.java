@@ -29,13 +29,8 @@ class HoursGenerator
      */
     private static boolean isValid(Duration length, int day, int curTime)
     {
-        int d = durationToIndex(length);
-        LocalTime start = indexToLocalTime(curTime);
         //end time is out of bounds situation
-        if (curTime + durationToIndex(length) > 44) {
-            return false;
-        }
-        return true;
+        return curTime + durationToIndex(length) <= 44;
     }
 
     /**
@@ -46,8 +41,7 @@ class HoursGenerator
         DayOfWeek d = DayOfWeek.of(day);
         LocalTime start = indexToLocalTime(curTime);
         LocalTime end = start.plusMinutes(length.toMinutes());
-        TimeSlot temp = new TimeSlot(DayOfWeek.of(day), start, end);
-        return temp;
+        return new TimeSlot(DayOfWeek.of(day), start, end);
     }
 
     /**
@@ -62,8 +56,7 @@ class HoursGenerator
     {
         int min = (index % 2) * 30;
         int hour = (index - (index % 2)) / 2;
-        LocalTime temp = LocalTime.of(hour, min);
-        return temp;
+        return LocalTime.of(hour, min);
     }
 
     /**
@@ -77,8 +70,6 @@ class HoursGenerator
 
     public static void main(String[] args)
     {
-        HoursGenerator hg = new HoursGenerator();
-
         Duration dur = Duration.ofMinutes(60);
         TimeSlot class1 = new TimeSlot(DayOfWeek.WEDNESDAY,
                 LocalTime.of(8, 0),
@@ -87,7 +78,7 @@ class HoursGenerator
                 LocalTime.of(8, 0),
                 LocalTime.of(22, 0));
 
-        List<TimeSlot> officeHours = hg.genHours(dur);
+        List<TimeSlot> officeHours = genHours(dur);
 
         for (TimeSlot hour : officeHours) {
             System.out.println(hour);

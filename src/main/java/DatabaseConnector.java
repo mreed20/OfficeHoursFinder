@@ -6,9 +6,8 @@ import java.util.*;
 
 class DatabaseConnector
 {
-    private final List<SchoolClass> classes = new ArrayList<>();
-    private Map<Integer, Student> students = new HashMap<>();
-    private Map<Integer, Teacher> teachers = new HashMap<>();
+    private final Map<Integer, Student> students = new HashMap<>();
+    private final Map<Integer, Teacher> teachers = new HashMap<>();
 
 
     DatabaseConnector(String url, String username, String password) throws SQLException
@@ -21,6 +20,7 @@ class DatabaseConnector
         ResultSet rs = statement.executeQuery("select * from public.classes"); //gets the list of all the classes from the classes table
 
         // loops through the result set and makes each a class a new SchoolClass object
+        List<SchoolClass> classes = new ArrayList<>();
         while (rs.next()) {
 
             String days = rs.getString("days"); //gets the days from the database

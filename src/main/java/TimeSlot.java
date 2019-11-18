@@ -2,7 +2,7 @@ import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.Objects;
 
-public class TimeSlot
+class TimeSlot
 {
     final private DayOfWeek day;
     final private LocalTime startTime;

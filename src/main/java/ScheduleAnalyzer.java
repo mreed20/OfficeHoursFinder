@@ -44,11 +44,11 @@ class ScheduleAnalyzer
 
     public static void main(String[] args)
     {
-        List<SchoolClass> classes1 = new ArrayList<SchoolClass>();
-        List<SchoolClass> classes2 = new ArrayList<SchoolClass>();
-        List<SchoolClass> classes3 = new ArrayList<SchoolClass>();
-        List<SchoolClass> classes4 = new ArrayList<SchoolClass>();
-        List<DayOfWeek> List1 = new ArrayList<DayOfWeek>();
+        List<SchoolClass> classes1 = new ArrayList<>();
+        List<SchoolClass> classes2 = new ArrayList<>();
+        List<SchoolClass> classes3 = new ArrayList<>();
+        List<SchoolClass> classes4 = new ArrayList<>();
+        List<DayOfWeek> List1 = new ArrayList<>();
         List1.add(DayOfWeek.TUESDAY);
         SchoolClass CS321 = new SchoolClass("CS321", List1, LocalTime.of(12, 0, 0), LocalTime.of(13, 15, 0));
         SchoolClass CS484 = new SchoolClass("CS484", List1, LocalTime.of(13, 0, 0), LocalTime.of(14, 15, 0));
@@ -56,7 +56,7 @@ class ScheduleAnalyzer
         classes2.add(CS484);
         classes3.add(CS321);
         classes3.add(CS484);
-        List<Student> students = new ArrayList<Student>();
+        List<Student> students = new ArrayList<>();
         students.add(new Student("Kiwoong", classes1));
         students.add(new Student("Avi", classes1));
         students.add(new Student("Michael", classes1));
@@ -68,7 +68,7 @@ class ScheduleAnalyzer
         students.add(new Student("Bob", classes4));
         students.add(new Student("Matt", classes4));
 
-        List<TimeSlot> times = new ArrayList<TimeSlot>();
+        List<TimeSlot> times = new ArrayList<>();
         times.add(new TimeSlot(DayOfWeek.TUESDAY, LocalTime.of(12, 0, 0), LocalTime.of(13, 30, 0)));
         times.add(new TimeSlot(DayOfWeek.TUESDAY, LocalTime.of(13, 0, 0), LocalTime.of(13, 30, 0)));
         times.add(new TimeSlot(DayOfWeek.TUESDAY, LocalTime.of(13, 0, 0), LocalTime.of(14, 30, 0)));
@@ -216,7 +216,7 @@ class ScheduleAnalyzer
      * Adds a specified TimeSlot into the list of chosenHours. Adding a member to chosenHours will affect future calls
      * of buildGeneratedHours.
      */
-    public void setOfficeHour(TimeSlot t)
+    void setOfficeHour(TimeSlot t)
     {
         this.chosenHours.add(t);
     }
@@ -246,12 +246,12 @@ class ScheduleAnalyzer
         boolean[][] available = new boolean[NUMDAYS][NUMINTERVALS];
         //Arrays.fill(available, true);
 
-        for (SchoolClass course : student.getClasses()) {
-            for (DayOfWeek day : course.getDays()) {
+        for (SchoolClass course : student.classes) {
+            for (DayOfWeek day : course.days) {
                 int i = dayToInt(day);
                 // assumes that minutes are in 15 minute increments
-                int start = localTimeToIndex(course.getStart());
-                int end = localTimeToIndex(course.getEnd());
+                int start = localTimeToIndex(course.startTime);
+                int end = localTimeToIndex(course.endTime);
                 for (int j = start; j < end; j++) {
                     available[i][j] = true;
                 }

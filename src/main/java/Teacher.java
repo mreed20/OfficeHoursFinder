@@ -5,20 +5,14 @@ public class Teacher
 {
 
     final String name;
-    final int Gnumber;
-    final List<SchoolClass> classes_taught;
+    final int gNumber;
+    final List<SchoolClass> classesTaught;
 
-    Teacher(String name, int gnumber, List<SchoolClass> classes_taught)
+    Teacher(String name, int gNumber, List<SchoolClass> classesTaught)
     {
-
         this.name = name;
-        this.Gnumber = gnumber;
-        this.classes_taught = classes_taught;
-    }
-
-    public List<SchoolClass> getClasses_taught()
-    {
-        return this.classes_taught;
+        this.gNumber = gNumber;
+        this.classesTaught = classesTaught;
     }
 
     @Override
@@ -26,7 +20,8 @@ public class Teacher
     {
         return "Teacher{" +
                 "name='" + name + '\'' +
-                ", classes taught =" + classes_taught +
+                ", gNumber=" + gNumber +
+                ", classesTaught=" + classesTaught +
                 '}';
     }
 
@@ -36,14 +31,14 @@ public class Teacher
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Teacher teacher = (Teacher) o;
-        return Objects.equals(name, teacher.name) &&
-                Objects.equals(Gnumber, teacher.Gnumber) &&
-                Objects.equals(classes_taught, teacher.classes_taught);
+        return gNumber == teacher.gNumber &&
+                Objects.equals(name, teacher.name) &&
+                Objects.equals(classesTaught, teacher.classesTaught);
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(name, Gnumber, classes_taught);
+        return Objects.hash(name, gNumber, classesTaught);
     }
 }
