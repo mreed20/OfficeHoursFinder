@@ -1,14 +1,17 @@
-import java.time.*;
+import java.time.DayOfWeek;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 
-class SchoolClass {
+class SchoolClass
+{
     final String name;
     final List<DayOfWeek> days;
     final LocalTime startTime;
     final LocalTime endTime;
 
-    SchoolClass(String name, List<DayOfWeek> days, LocalTime startTime, LocalTime endTime) {
+    SchoolClass(String name, List<DayOfWeek> days, LocalTime startTime, LocalTime endTime)
+    {
         this.name = name;
         this.days = days;
         this.startTime = startTime;
@@ -16,20 +19,24 @@ class SchoolClass {
     }
 
     // TODO: all instance variables are final... so why are there getters?
-    List<DayOfWeek> getDays() {
-    	return this.days;
+    List<DayOfWeek> getDays()
+    {
+        return this.days;
     }
 
-    LocalTime getStart() {
-    	return this.startTime;
+    LocalTime getStart()
+    {
+        return this.startTime;
     }
-    
-    LocalTime getEnd() {
-    	return this.endTime;
+
+    LocalTime getEnd()
+    {
+        return this.endTime;
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "SchoolClass{" +
                 "name='" + name + '\'' +
                 ", days=" + days +
@@ -39,7 +46,8 @@ class SchoolClass {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(Object o)
+    {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SchoolClass that = (SchoolClass) o;
@@ -50,7 +58,8 @@ class SchoolClass {
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return Objects.hash(name, days, startTime, endTime);
     }
 }

@@ -1,26 +1,49 @@
-import java.time.*;
+import java.time.DayOfWeek;
+import java.time.LocalTime;
 import java.util.Objects;
 
-public class TimeSlot {
+public class TimeSlot
+{
     final private DayOfWeek day;
     final private LocalTime startTime;
     final private LocalTime endTime;
 
-    TimeSlot(DayOfWeek day, LocalTime start, LocalTime end) {
+    TimeSlot(DayOfWeek day, LocalTime start, LocalTime end)
+    {
         this.day = day;
         this.startTime = start;
         this.endTime = end;
     }
 
-    public DayOfWeek getDay() {
+    private static String dayOfWeekToString(DayOfWeek d)
+    {
+        if (d.equals(DayOfWeek.MONDAY)) {
+            return "M";
+        } else if (d.equals(DayOfWeek.TUESDAY)) {
+            return "Tu";
+        } else if (d.equals(DayOfWeek.WEDNESDAY)) {
+            return "W";
+        } else if (d.equals(DayOfWeek.THURSDAY)) {
+            return "Th";
+        } else if (d.equals(DayOfWeek.FRIDAY)) {
+            return "F";
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    public DayOfWeek getDay()
+    {
         return day;
     }
 
-    public LocalTime getStartTime() {
+    public LocalTime getStartTime()
+    {
         return startTime;
     }
 
-    public LocalTime getEndTime() {
+    public LocalTime getEndTime()
+    {
         return endTime;
     }
 
@@ -35,7 +58,8 @@ public class TimeSlot {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(Object o)
+    {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TimeSlot timeSlot = (TimeSlot) o;
@@ -45,25 +69,9 @@ public class TimeSlot {
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return Objects.hash(day, startTime, endTime);
-    }
-
-
-    private static String dayOfWeekToString(DayOfWeek d) {
-        if (d.equals(DayOfWeek.MONDAY)) {
-            return "M";
-        } else if (d.equals(DayOfWeek.TUESDAY)) {
-            return "Tu";
-        } else if (d.equals(DayOfWeek.WEDNESDAY)) {
-            return "W";
-        } else if (d.equals(DayOfWeek.THURSDAY)) {
-            return "Th";
-        } else if (d.equals(DayOfWeek.FRIDAY)) {
-            return "F";
-        } else {
-            throw new IllegalArgumentException();
-        }
     }
 
 }

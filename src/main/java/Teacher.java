@@ -1,25 +1,29 @@
 import java.util.List;
 import java.util.Objects;
 
-public class Teacher {
+public class Teacher
+{
 
     final String name;
     final int Gnumber;
     final List<SchoolClass> classes_taught;
 
-     Teacher(String name, int gnumber, List<SchoolClass>classes_taught){
+    Teacher(String name, int gnumber, List<SchoolClass> classes_taught)
+    {
 
         this.name = name;
         this.Gnumber = gnumber;
         this.classes_taught = classes_taught;
     }
 
-    public List<SchoolClass> getClasses_taught(){
+    public List<SchoolClass> getClasses_taught()
+    {
         return this.classes_taught;
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "Teacher{" +
                 "name='" + name + '\'' +
                 ", classes taught =" + classes_taught +
@@ -27,7 +31,8 @@ public class Teacher {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(Object o)
+    {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Teacher teacher = (Teacher) o;
@@ -37,7 +42,8 @@ public class Teacher {
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return Objects.hash(name, Gnumber, classes_taught);
     }
 }

@@ -1,22 +1,26 @@
 import java.util.List;
 import java.util.Objects;
 
-class Student {
+class Student
+{
 
     final String name;
     final List<SchoolClass> classes;
 
-    Student(String name, List<SchoolClass> classes) {
+    Student(String name, List<SchoolClass> classes)
+    {
         this.name = name;
         this.classes = classes;
     }
 
-    public List<SchoolClass> getClasses(){
-    	return this.classes;
+    public List<SchoolClass> getClasses()
+    {
+        return this.classes;
     }
-    
+
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "Student{" +
                 "name='" + name + '\'' +
                 ", classes=" + classes +
@@ -24,7 +28,8 @@ class Student {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(Object o)
+    {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Student student = (Student) o;
@@ -33,7 +38,8 @@ class Student {
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return Objects.hash(name, classes);
     }
 }

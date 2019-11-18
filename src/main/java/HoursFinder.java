@@ -7,16 +7,16 @@ import java.time.Duration;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
-public class HoursFinder {
+public class HoursFinder
+{
 
     // For getting all of our data
     private static DatabaseConnector dc;
 
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
 
         try {
             final String url = "jdbc:postgresql://localhost:5432/postgres";
@@ -128,10 +128,11 @@ public class HoursFinder {
     }
 
 
-    private static void renderDisplayGeneratedHours(Context ctx, List<GeneratedHour> hours) {
+    private static void renderDisplayGeneratedHours(Context ctx, List<GeneratedHour> hours)
+    {
         // This gets rid of duplicates and sorts the set by largest availability
         // percentage first.
-        TreeSet<GeneratedHour> sorted = new TreeSet<GeneratedHour>(
+        TreeSet<GeneratedHour> sorted = new TreeSet<>(
                 Comparator.comparing(GeneratedHour::getAvailPercent).reversed()
         );
         sorted.addAll(hours);
@@ -149,7 +150,8 @@ public class HoursFinder {
     }
 
 
-    private static void renderSelectClass(Context ctx, Teacher teacher) {
+    private static void renderSelectClass(Context ctx, Teacher teacher)
+    {
         // Build a model which mustache will parse.
         Map<String, Object> model = new HashMap<>();
         model.put("username", teacher.name);
@@ -159,7 +161,8 @@ public class HoursFinder {
         ctx.render(Paths.MUSTACHE_SELECT_CLASS, model);
     }
 
-    private static List<Map<String, String>> classesToMap(List<SchoolClass> classes) {
+    private static List<Map<String, String>> classesToMap(List<SchoolClass> classes)
+    {
         // TODO: this line of code gave me cancer, but it works
         return classes.stream()
                 .map(c -> c.name)

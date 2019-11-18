@@ -1,4 +1,5 @@
-class GeneratedHour {
+class GeneratedHour
+{
 
     final private float availPercent;
     final private TimeSlot t;

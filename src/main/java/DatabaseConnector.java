@@ -1,17 +1,18 @@
 import java.sql.*;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
-import java.util.*;
 import java.time.format.DateTimeFormatter;
+import java.util.*;
 
-class DatabaseConnector {
-
+class DatabaseConnector
+{
     private final List<SchoolClass> classes = new ArrayList<>();
     private Map<Integer, Student> students = new HashMap<>();
     private Map<Integer, Teacher> teachers = new HashMap<>();
 
 
-    DatabaseConnector(String url, String username, String password) throws SQLException {
+    DatabaseConnector(String url, String username, String password) throws SQLException
+    {
         Connection conn = DriverManager.getConnection(url, username, password); //makes the connection
 
         Statement statement = conn.createStatement(); //sets up to make an sql statement
@@ -92,7 +93,8 @@ class DatabaseConnector {
     }
 
     // Get all the students in a class.
-    Set<Student> getStudents(String className) {
+    Set<Student> getStudents(String className)
+    {
         Set<Student> studentsInClass = new HashSet<>();
 
         // For each student, check if they are in the class
@@ -110,8 +112,8 @@ class DatabaseConnector {
     }
 
 
-
-    Teacher getTeacher(int gNumber) {
+    Teacher getTeacher(int gNumber)
+    {
         return this.teachers.get(gNumber);
     }
 }
