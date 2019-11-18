@@ -101,8 +101,8 @@ public class HoursFinder {
                     // Finally generate the requisite time slots needed by ScheduleAnalyzer.
                     List<TimeSlot> timeSlots = HoursGenerator.genHours(d);
 
-                    // Get the name of the currently selected class, which we store
-                    // in a cookie.
+                    // Get the name of the currently selected class, which we stored
+                    // in a cookie previously.
                     String currentClassName = ctx.cookieStore("current_class");
                     assert currentClassName != null;
 
@@ -127,9 +127,8 @@ public class HoursFinder {
 
     }
 
-    // TODO: take String `selection` as parameter
-    private static void renderDisplayGeneratedHours(Context ctx, List<GeneratedHour> hours) {
 
+    private static void renderDisplayGeneratedHours(Context ctx, List<GeneratedHour> hours) {
         // This gets rid of duplicates and sorts the set by largest availability
         // percentage first.
         TreeSet<GeneratedHour> sorted = new TreeSet<GeneratedHour>(
@@ -143,7 +142,7 @@ public class HoursFinder {
         Map<String, Object> model = new HashMap<>();
         for (int i = 0; i < 5 && it.hasNext(); i++) {
             GeneratedHour h = it.next();
-            model.put("a" + i, h.getAvailPercent());
+            model.put("a" + i, String.format("%.2f%%", h.getAvailPercent()));
             model.put("t" + i, h.getTimeSlot().toString());
         }
         ctx.render(Paths.MUSTACHE_DISPLAY_GENERATED_HOURS, model);
