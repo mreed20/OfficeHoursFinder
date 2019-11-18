@@ -12,9 +12,48 @@ WHICH PRIORITIZES STUDENTS WHO COULD NOT ATTEND THE CHOSEN OFFICE HOUR
     <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 
-<body>
+<body style="text-align:center">
 <div class="w3-display-middle">
-    TODO
+    <form method="post" action="/generate_again">
+        <table class="w3-table-all w3-centered">
+            <caption>Generated hours</caption>
+            <tr>
+                <th></th>
+                <th>Availability </th>
+                <th>Time Slot</th>
+            </tr>
+            <tr>
+                <td><input class="w3-radio" type="radio" name="selection" value="{{t0}}" /></td>
+                <td>{{a0}}%</td>
+                <td>{{t0}}</td>
+            </tr>
+            <tr>
+                <td><input class="w3-radio" type="radio" name="selection" value="{{t1}}" /></td>
+                <td>{{a1}}%</td>
+                <td>{{t1}}</td>
+            </tr>
+            <tr>
+                <td><input class="w3-radio" type="radio" name="selection" value="{{t2}}" /></td>
+                <td>{{a2}}%</td>
+                <td>{{t2}}</td>
+            </tr>
+            <tr>
+                <td><input class="w3-radio" type="radio" name="selection" value="{{t3}}" /></td>
+                <td>{{a3}}%</td>
+                <td>{{t3}}</td>
+            </tr>
+            <tr>
+                <td><input class="w3-radio" type="radio" name="selection" value="{{t4}}" /></td>
+                <td>{{a4}}%</td>
+                <td>{{t4}}</td>
+            </tr>
+            <tr>
+                <td colspan="3"><em>Additional results omitted</em></td>
+            </tr>
+        </table>
+        <br>
+        <button class="w3-btn">Find additional hours</button>
+    </form>
 </div>
 </body>
 </html>

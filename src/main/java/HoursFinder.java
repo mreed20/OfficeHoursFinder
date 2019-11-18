@@ -36,6 +36,10 @@ public class HoursFinder {
         app.post("/login", ctx -> {
                     try {
                         int gNumber = Integer.parseInt(ctx.formParam("gnumber"));
+                        if (gNumber < 0 || gNumber > 99999999) {
+                            throw new NumberFormatException();
+                        }
+
                         Teacher teacher = dc.getTeacher(gNumber);
                         if (teacher != null) {
                             renderSelectClass(ctx, teacher);
@@ -63,10 +67,38 @@ public class HoursFinder {
         app.post("/select_availability", ctx -> {
                     String selection = ctx.formParam("length");
                     assert selection != null;
-                    ctx.html(selection);
+                    // TODO: do some stuff
+                    renderDisplayGeneratedHours(ctx);
                 }
         );
 
+        app.post("/generate_again", ctx -> {
+                    String selection = ctx.formParam("selection");
+                    if (selection == null) {
+                        ctx.html("it's null yo");
+                    } else {
+                        ctx.html("selection:" + selection);
+                    }
+                }
+        );
+
+    }
+
+    // TODO: take String `selection` as parameter
+    private static void renderDisplayGeneratedHours(Context ctx) {
+        Map<String, String> model = Map.of(
+                "a0", "95",
+                "t0", "M 3:00 pm - 5:00 pm",
+                "a1", "87",
+                "t1", "F 3:30 pm - 5:30 pm",
+                "a2", "84",
+                "t2", "W 9:15 am - 11:15 am",
+                "a3", "71",
+                "t3", "Tr 11:45 am - 1:45 pm",
+                "a4", "67",
+                "t4", "M 8:00 pm - 10:00 pm"
+        );
+        ctx.render(Paths.MUSTACHE_DISPLAY_GENERATED_HOURS, model);
     }
 
 
