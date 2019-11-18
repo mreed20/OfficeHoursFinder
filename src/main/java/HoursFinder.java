@@ -7,6 +7,7 @@ import java.time.Duration;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
@@ -16,9 +17,6 @@ public class HoursFinder {
     private static DatabaseConnector dc;
 
     public static void main(String[] args) {
-
-        // TODO: global variable hack
-        AtomicReference<String> currentClass = new AtomicReference<>("");
 
         try {
             final String url = "jdbc:postgresql://localhost:5432/postgres";
@@ -50,6 +48,9 @@ public class HoursFinder {
 
                         Teacher teacher = dc.getTeacher(gNumber);
                         if (teacher != null) {
+                            // Set a cookie on the client so that other pages know
+                            // who is logged in, and thus what data to generate.
+                            ctx.cookieStore("current_user", gNumber);
                             renderSelectClass(ctx, teacher);
                         } else {
                             ctx.render(Paths.MUSTACHE_INDEX, ErrorMaps.USER_NOT_FOUND);
@@ -67,7 +68,7 @@ public class HoursFinder {
                     // have the `required` attribute, meaning that at least one radio button must be selected
                     // before the browser submits the form.
                     assert selection != null;
-                    currentClass.set(selection);
+                    ctx.cookieStore("current_class", selection);
                     ctx.render(Paths.MUSTACHE_SELECT_AVAILABILITY);
                 }
         );
@@ -99,10 +100,14 @@ public class HoursFinder {
 
                     // Finally generate the requisite time slots needed by ScheduleAnalyzer.
                     List<TimeSlot> timeSlots = HoursGenerator.genHours(d);
-                    ctx.html(timeSlots.toString());
+
+                    // Get the name of the currently selected class, which we store
+                    // in a cookie.
+                    String currentClassName = ctx.cookieStore("current_class");
+                    assert currentClassName != null;
 
                     // Get the list of students in the class.
-                    List<Student> students = new ArrayList<>(dc.getStudents(currentClass.get()));
+                    List<Student> students = new ArrayList<>(dc.getStudents(currentClassName));
                     // Generate the office hours.
                     ScheduleAnalyzer analyzer = new ScheduleAnalyzer(students, timeSlots);
                     List<GeneratedHour> hours = analyzer.buildGeneratedHours();
@@ -112,11 +117,11 @@ public class HoursFinder {
 
         app.post("/generate_again", ctx -> {
                     String selection = ctx.formParam("selection");
-                    if (selection == null) {
-                        ctx.html("it's null yo");
-                    } else {
-                        ctx.html("selection:" + selection);
-                    }
+                    assert selection != null;
+                    // Clear cookies, which effectively logs the user out
+                    ctx.clearCookieStore();
+                    // Redirect to home page for now.
+                    ctx.redirect("/");
                 }
         );
 
@@ -133,7 +138,7 @@ public class HoursFinder {
     private static void renderDisplayGeneratedHours(Context ctx, List<GeneratedHour> hours) {
 
         // Sort the hours, with the highest availability percentage first.
-        hours.sort(Comparator.comparing(GeneratedHour::getAvailPercent));
+        hours.sort(Comparator.comparing(GeneratedHour::getAvailPercent).reversed());
         // We need at least 5 hours to populate our table.
         assert hours.size() >= 5;
 
