@@ -123,7 +123,7 @@ class ScheduleAnalyzer {
 					//Who are already available to go to a chosen office hour
 					List<Student> studentsAvailable = new ArrayList<>(initialHours.get(t));
 					studentsAvailable.removeAll(alreadyAvail);
-					float availPercent = ((float)(studentsAvailable.size()))/students.size();
+					float availPercent = ((float)(studentsAvailable.size()))/students.size() * 100;
 					generatedHours.add(new GeneratedHour(availPercent, t));
 				}
 			}
@@ -134,7 +134,7 @@ class ScheduleAnalyzer {
 		{
 			for(TimeSlot t : this.hours)
 			{
-				float availPercent = ((float)(initialHours.get(t).size()))/students.size();
+				float availPercent = ((float)(initialHours.get(t).size()))/students.size() * 100;
 				generatedHours.add(new GeneratedHour(availPercent, t));
 			}
 			return generatedHours;

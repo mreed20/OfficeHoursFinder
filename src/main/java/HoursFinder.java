@@ -127,42 +127,25 @@ public class HoursFinder {
 
     }
 
-    private static Map.Entry<String, String> hourToMapEntry(GeneratedHour hour) {
-        return new AbstractMap.SimpleEntry<>(
-                String.format("%.2f", hour.getAvailPercent()),
-                hour.getTimeSlot().toString()
-        );
-    }
-
     // TODO: take String `selection` as parameter
     private static void renderDisplayGeneratedHours(Context ctx, List<GeneratedHour> hours) {
 
-        // Sort the hours, with the highest availability percentage first.
-        hours.sort(Comparator.comparing(GeneratedHour::getAvailPercent).reversed());
+        // This gets rid of duplicates and sorts the set by largest availability
+        // percentage first.
+        TreeSet<GeneratedHour> sorted = new TreeSet<GeneratedHour>(
+                Comparator.comparing(GeneratedHour::getAvailPercent).reversed()
+        );
+        sorted.addAll(hours);
         // We need at least 5 hours to populate our table.
         assert hours.size() >= 5;
 
-        List<Map.Entry<String, String>> es = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            es.add(hourToMapEntry(hours.get(0)));
+        Iterator<GeneratedHour> it = sorted.iterator();
+        Map<String, Object> model = new HashMap<>();
+        for (int i = 0; i < 5 && it.hasNext(); i++) {
+            GeneratedHour h = it.next();
+            model.put("a" + i, h.getAvailPercent());
+            model.put("t" + i, h.getTimeSlot().toString());
         }
-
-        Map<String, String> model = Map.of(
-                "a0", es.get(0).getKey(),
-                "t0", es.get(0).getValue(),
-
-                "a1", es.get(1).getKey(),
-                "t1", es.get(1).getValue(),
-
-                "a2", es.get(2).getKey(),
-                "t2", es.get(2).getValue(),
-
-                "a3", es.get(3).getKey(),
-                "t3", es.get(3).getValue(),
-
-                "a4", es.get(4).getKey(),
-                "t4", es.get(4).getValue()
-        );
         ctx.render(Paths.MUSTACHE_DISPLAY_GENERATED_HOURS, model);
     }
 
