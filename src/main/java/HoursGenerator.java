@@ -6,15 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 class HoursGenerator {
-    private List<TimeSlot> hours;
-    private final int eightAM = localTimeToIndex(LocalTime.of(8,0));
-    private final int tenPM = localTimeToIndex(LocalTime.of(22,0));
+    private static final int eightAM = localTimeToIndex(LocalTime.of(8,0));
+    private static final int tenPM = localTimeToIndex(LocalTime.of(22,0));
 
-    HoursGenerator() {
-        this.hours = new ArrayList<>();
-    }
-
-    public List<TimeSlot> genHours(Duration length, List<TimeSlot> schedule) {
+    public static List<TimeSlot> genHours(Duration length, List<TimeSlot> schedule) {
+        List<TimeSlot> hours = new ArrayList<>();
         //Go through each day 1:Mon ... 5:Fri
         for(int i = 1; i < 6; i++) {
             //go through each half hour in the day from 8am to 10pm
@@ -30,7 +26,7 @@ class HoursGenerator {
     /**
      * Helper function to check if that office hour slot is available
      */
-    private boolean isAvailable(Duration length, List<TimeSlot> schedule, int day, int curTime) {
+    private static boolean isAvailable(Duration length, List<TimeSlot> schedule, int day, int curTime) {
         int d = durationToIndex(length);
         LocalTime start = indexToLocalTime(curTime);
 
@@ -52,7 +48,7 @@ class HoursGenerator {
     /**
      * internal helper method to see if there is conflict in time
      */
-    private boolean isTimeConflict(LocalTime startOffice, LocalTime endOffice, TimeSlot teacher_class){
+    private static boolean isTimeConflict(LocalTime startOffice, LocalTime endOffice, TimeSlot teacher_class){
         //class is after the end of the office hour
         if (teacher_class.getStartTime().isAfter(endOffice)) {
             return true;
@@ -76,7 +72,7 @@ class HoursGenerator {
         return true;
     }
 
-    private TimeSlot create(int day, int curTime, Duration length) {
+    private static TimeSlot create(int day, int curTime, Duration length) {
         DayOfWeek d = DayOfWeek.of(day);
         LocalTime start = indexToLocalTime(curTime);
         LocalTime end = start.plusHours(length.toMinutes());

@@ -67,7 +67,12 @@ public class HoursFinder {
         app.post("/select_availability", ctx -> {
                     String selection = ctx.formParam("length");
                     assert selection != null;
-                    // TODO: do some stuff
+                    // check-m
+                    // check-tu
+                    // check-w
+                    // check-tr
+                    // check-f
+                    // length
                     renderDisplayGeneratedHours(ctx);
                 }
         );
