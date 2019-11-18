@@ -98,6 +98,7 @@ class HoursGenerator {
      *  ex: 60 minutes --> 2; 90 minutes --> 3; 1 hour 30 minutes --> 3
      */
     private static int durationToIndex(Duration dur) {
+        assert dur.toMinutes() % 30 == 0;
         return (int)dur.toMinutes() / 30;
     }
 
