@@ -6,7 +6,6 @@ public class TimeSlot {
     final private LocalTime startTime;
     final private LocalTime endTime;
 
-    // TODO: natural ordering
     TimeSlot(DayOfWeek day, LocalTime start, LocalTime end) {
         this.day = day;
         this.startTime = start;
@@ -23,6 +22,16 @@ public class TimeSlot {
 
     public LocalTime getEndTime() {
         return endTime;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "TimeSlot{" +
+                "day=" + day +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                '}';
     }
 
     @Override
