@@ -91,6 +91,26 @@ class DatabaseConnector {
         }
     }
 
+    // Get all the students in a class.
+    Set<Student> getStudents(String className) {
+        Set<Student> studentsInClass = new HashSet<>();
+
+        // For each student, check if they are in the class
+        // entitled `className`. If so, add them to the list
+        // studentsInClass.
+        for (Student s : this.students.values()) {
+            for (SchoolClass sc : s.classes) {
+                if (sc.name.equals(className)) {
+                    studentsInClass.add(s);
+                }
+            }
+        }
+
+        return studentsInClass;
+    }
+
+
+
     Teacher getTeacher(int gNumber) {
         return this.teachers.get(gNumber);
     }

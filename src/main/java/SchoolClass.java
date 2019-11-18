@@ -4,28 +4,27 @@ import java.util.Objects;
 
 class SchoolClass {
     final String name;
-    //final String room;
     final List<DayOfWeek> days;
     final LocalTime startTime;
     final LocalTime endTime;
 
     SchoolClass(String name, List<DayOfWeek> days, LocalTime startTime, LocalTime endTime) {
         this.name = name;
-        //this.room = room;
         this.days = days;
         this.startTime = startTime;
         this.endTime = endTime;
     }
-    
-    public List<DayOfWeek> getDays() {
+
+    // TODO: all instance variables are final... so why are there getters?
+    List<DayOfWeek> getDays() {
     	return this.days;
     }
-    
-    public LocalTime getStart() {
+
+    LocalTime getStart() {
     	return this.startTime;
     }
     
-    public LocalTime getEnd() {
+    LocalTime getEnd() {
     	return this.endTime;
     }
 
@@ -45,7 +44,6 @@ class SchoolClass {
         if (o == null || getClass() != o.getClass()) return false;
         SchoolClass that = (SchoolClass) o;
         return Objects.equals(name, that.name) &&
-                //Objects.equals(room, that.room) &&
                 Objects.equals(days, that.days) &&
                 Objects.equals(startTime, that.startTime) &&
                 Objects.equals(endTime, that.endTime);

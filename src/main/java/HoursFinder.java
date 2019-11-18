@@ -7,6 +7,7 @@ import java.time.Duration;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 public class HoursFinder {
@@ -15,6 +16,9 @@ public class HoursFinder {
     private static DatabaseConnector dc;
 
     public static void main(String[] args) {
+
+        // TODO: global variable hack
+        AtomicReference<String> currentClass = new AtomicReference<>("");
 
         try {
             final String url = "jdbc:postgresql://localhost:5432/postgres";
@@ -63,6 +67,7 @@ public class HoursFinder {
                     // have the `required` attribute, meaning that at least one radio button must be selected
                     // before the browser submits the form.
                     assert selection != null;
+                    currentClass.set(selection);
                     ctx.render(Paths.MUSTACHE_SELECT_AVAILABILITY);
                 }
         );
@@ -86,7 +91,7 @@ public class HoursFinder {
                     }
 
                     // Get office hour length.
-                    int minutes = Integer.parseInt(ctx.formParam("length")
+                    int minutes = Integer.parseInt(Objects.requireNonNull(ctx.formParam("length"))
                             .split(" ")[0]);
                     assert minutes >= 30 && minutes <= 120;
                     Duration d = Duration.of(minutes, ChronoUnit.MINUTES);
@@ -95,7 +100,13 @@ public class HoursFinder {
                     // Finally generate the requisite time slots needed by ScheduleAnalyzer.
                     List<TimeSlot> timeSlots = HoursGenerator.genHours(d);
                     ctx.html(timeSlots.toString());
-//                    renderDisplayGeneratedHours(ctx);
+
+                    // Get the list of students in the class.
+                    List<Student> students = new ArrayList<>(dc.getStudents(currentClass.get()));
+                    // Generate the office hours.
+                    ScheduleAnalyzer analyzer = new ScheduleAnalyzer(students, timeSlots);
+                    List<GeneratedHour> hours = analyzer.buildGeneratedHours();
+                    renderDisplayGeneratedHours(ctx, hours);
                 }
         );
 
@@ -111,19 +122,41 @@ public class HoursFinder {
 
     }
 
+    private static Map.Entry<String, String> hourToMapEntry(GeneratedHour hour) {
+        return new AbstractMap.SimpleEntry<>(
+                hour.getAvailPercent() + "",
+                hour.getTimeSlot().toString()
+        );
+    }
+
     // TODO: take String `selection` as parameter
-    private static void renderDisplayGeneratedHours(Context ctx) {
+    private static void renderDisplayGeneratedHours(Context ctx, List<GeneratedHour> hours) {
+
+        // Sort the hours, with the highest availability percentage first.
+        hours.sort(Comparator.comparing(GeneratedHour::getAvailPercent));
+        // We need at least 5 hours to populate our table.
+        assert hours.size() >= 5;
+
+        List<Map.Entry<String, String>> es = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            es.add(hourToMapEntry(hours.get(0)));
+        }
+
         Map<String, String> model = Map.of(
-                "a0", "95",
-                "t0", "M 3:00 pm - 5:00 pm",
-                "a1", "87",
-                "t1", "F 3:30 pm - 5:30 pm",
-                "a2", "84",
-                "t2", "W 9:15 am - 11:15 am",
-                "a3", "71",
-                "t3", "Tr 11:45 am - 1:45 pm",
-                "a4", "67",
-                "t4", "M 8:00 pm - 10:00 pm"
+                "a0", es.get(0).getKey(),
+                "t0", es.get(0).getValue(),
+
+                "a1", es.get(1).getKey(),
+                "t1", es.get(1).getValue(),
+
+                "a2", es.get(2).getKey(),
+                "t2", es.get(2).getValue(),
+
+                "a3", es.get(3).getKey(),
+                "t3", es.get(3).getValue(),
+
+                "a4", es.get(4).getKey(),
+                "t4", es.get(4).getValue()
         );
         ctx.render(Paths.MUSTACHE_DISPLAY_GENERATED_HOURS, model);
     }
