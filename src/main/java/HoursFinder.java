@@ -130,12 +130,14 @@ class HoursFinder
 
     private static void renderDisplayGeneratedHours(Context ctx, List<GeneratedHour> hours)
     {
+        Map<String, Object> model = new HashMap<>();
+        model.put("classname", ctx.cookieStore("current_class"));
+
         hours.sort(Comparator.comparing(GeneratedHour::getAvailPercent).reversed());
         // We need at least 5 hours to populate our table.
         assert hours.size() >= 5;
 
         Iterator<GeneratedHour> it = hours.iterator();
-        Map<String, Object> model = new HashMap<>();
         for (int i = 0; i < 5 && it.hasNext(); i++) {
             GeneratedHour h = it.next();
             model.put("a" + i, String.format("%.2f%%", h.getAvailPercent()));
