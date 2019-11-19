@@ -12,8 +12,14 @@ WHICH PRIORITIZES STUDENTS WHO COULD NOT ATTEND THE CHOSEN OFFICE HOUR
     <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 
-<body style="text-align:center">
-<div class="w3-display-middle">
+<body>
+
+<!--Logout button-->
+<div class="w3-display-bottommiddle">
+    <a href="/logout">Logout</a>
+</div>
+
+<div class="w3-display-middle" style="text-align:center">
     <form method="post" action="/generate_again">
         <table class="w3-table-all w3-centered">
             <caption>Generated hours for {{classname}}</caption>

@@ -125,8 +125,14 @@ class HoursFinder
                 }
         );
 
+        app.before("/logout", ctx -> {
+                    // Clear cookies.
+                    ctx.clearCookieStore();
+                    // Redirect to home page.
+                    ctx.redirect("/logged_out.html");
+                }
+        );
     }
-
 
     private static void renderDisplayGeneratedHours(Context ctx, List<GeneratedHour> hours)
     {
