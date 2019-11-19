@@ -118,17 +118,10 @@ class HoursFinder
         );
 
         app.post("/generate_again", ctx -> {
-
-                    // TODO: this page should have 2 buttons, in a rectangular
-                    // card below the main card. Said buttons will bring the user
-                    // back to the class selection page, or generate hours for the
-                    // class a second time.
                     String selection = ctx.formParam("selection");
                     assert selection != null;
-                    // Clear cookies, which effectively logs the user out
-                    ctx.clearCookieStore();
                     // Redirect to home page for now.
-                    ctx.redirect("/");
+                    ctx.html(selection);
                 }
         );
 
@@ -147,7 +140,7 @@ class HoursFinder
         model.put("classname", ctx.cookieStore("current_class"));
 
         // TODO: test that no hours coincide with the class being selected
-        hours.sort(Comparator.comparing(GeneratedHour::getAvailPercent));
+        hours.sort(Comparator.comparing(GeneratedHour::getAvailPercent).reversed());
         // We need at least 5 hours to populate our table.
         assert hours.size() >= 5;
 

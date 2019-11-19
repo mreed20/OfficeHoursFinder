@@ -20,6 +20,7 @@ WHICH PRIORITIZES STUDENTS WHO COULD NOT ATTEND THE CHOSEN OFFICE HOUR
 </div>
 
 <div class="w3-display-middle" style="text-align:center">
+
     <form method="post" action="/generate_again">
         <table class="w3-table-all w3-centered">
             <caption>Generated hours for {{classname}}</caption>
@@ -29,7 +30,7 @@ WHICH PRIORITIZES STUDENTS WHO COULD NOT ATTEND THE CHOSEN OFFICE HOUR
                 <th>Time Slot</th>
             </tr>
             <tr>
-                <td><input class="w3-radio" type="radio" name="selection" value="{{t0}}" /></td>
+                <td><input class="w3-radio" type="radio" name="selection" value="{{t0}}" required /></td>
                 <td>{{a0}}</td>
                 <td>{{t0}}</td>
             </tr>
@@ -57,9 +58,17 @@ WHICH PRIORITIZES STUDENTS WHO COULD NOT ATTEND THE CHOSEN OFFICE HOUR
                 <td colspan="3"><em>Additional results omitted</em></td>
             </tr>
         </table>
-        <br>
-        <button class="w3-btn">Find additional hours</button>
+
+        <div class="w3-dropdown-hover w3-margin">
+            <button class="w3-button">Generate more hours for...</button>
+            <div class="w3-dropdown-content w3-bar-block w3-border">
+                <button class="w3-bar-item w3-button" name="next_page" type="submit" value="same_class">{{classname}}</button>
+                <button class="w3-bar-item w3-button" name="next_page" type="submit" value="new_class">(New class)</button>
+            </div>
+        </div>
+
     </form>
+
 </div>
 </body>
 </html>
