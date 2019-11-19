@@ -130,16 +130,11 @@ class HoursFinder
 
     private static void renderDisplayGeneratedHours(Context ctx, List<GeneratedHour> hours)
     {
-        // This gets rid of duplicates and sorts the set by largest availability
-        // percentage first.
-        TreeSet<GeneratedHour> sorted = new TreeSet<>(
-                Comparator.comparing(GeneratedHour::getAvailPercent).reversed()
-        );
-        sorted.addAll(hours);
+        hours.sort(Comparator.comparing(GeneratedHour::getAvailPercent).reversed());
         // We need at least 5 hours to populate our table.
         assert hours.size() >= 5;
 
-        Iterator<GeneratedHour> it = sorted.iterator();
+        Iterator<GeneratedHour> it = hours.iterator();
         Map<String, Object> model = new HashMap<>();
         for (int i = 0; i < 5 && it.hasNext(); i++) {
             GeneratedHour h = it.next();
