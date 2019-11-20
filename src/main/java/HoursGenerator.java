@@ -4,18 +4,27 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * An intermediate class used to generate office hour slots of a desired length
+ * Note:
+ * Only schedules office hours on every 30 minute intervals
+ * Times are represented in 24hr time
+ */
 class HoursGenerator
 {
     private static final int eightAM = localTimeToIndex(LocalTime.of(8, 0));
     private static final int tenPM = localTimeToIndex(LocalTime.of(22, 0));
 
-    static List<TimeSlot> genHours(Duration length)
+    /**
+     * The main function
+     */
+    static List<TimeSlot> genHours(Duration length, List<DayOfWeek> days)
     {
         List<TimeSlot> hours = new ArrayList<>();
-        //Go through each day 1:Mon ... 5:Fri
-        for (int i = 1; i < 6; i++) {
-            //go through each half hour in the day from 8am to 10pm
+        //Generate office hours for each day in the list of days desired
+        for (DayOfWeek day : days) {
             for (int j = eightAM; j < tenPM; j++) {
+                int i = day.getValue();
                 if (isValid(length, i, j)) {
                     hours.add(create(i, j, length));
                 }
@@ -78,7 +87,7 @@ class HoursGenerator
                 LocalTime.of(8, 0),
                 LocalTime.of(22, 0));
 
-        List<TimeSlot> officeHours = genHours(dur);
+        List<TimeSlot> officeHours = genHours(dur, List.of(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY));
 
         for (TimeSlot hour : officeHours) {
             System.out.println(hour);

@@ -75,19 +75,13 @@ class HoursFinder
 
         // Availability selection handler.
         app.post("/select_availability", ctx -> {
-                    // Get provided schedule from the HTML POST, which contains information about which
+                    // Get provided schedule from the HTTP POST, which contains information about which
                     // boxes the user checked (the form parameter will be non-null if the box is checked).
-                    List<TimeSlot> schedule = new ArrayList<>();
+                    List<DayOfWeek> daysAvailable = new ArrayList<>();
                     for (String key : new String[]{"m", "tu", "w", "tr", "f"}) {
                         if (ctx.formParam(key) != null) {
-                            // The user said they are free on this day, so make them available
-                            // from 8:00 am to 10:00 pm.
-                            TimeSlot t = new TimeSlot(
-                                    strToDayOfWeek(key),
-                                    LocalTime.of(8, 0),
-                                    LocalTime.of(22, 0)
-                            );
-                            schedule.add(t);
+                            // The user said they are free on this day.
+                            daysAvailable.add(strToDayOfWeek(key));
                         }
                     }
 
@@ -97,11 +91,8 @@ class HoursFinder
                     assert minutes >= 30 && minutes <= 120;
                     Duration d = Duration.of(minutes, ChronoUnit.MINUTES);
 
-                    // TODO: read selection of available days, and pass that into the HoursGenerator
-
-
                     // Finally generate the requisite time slots needed by ScheduleAnalyzer.
-                    List<TimeSlot> timeSlots = HoursGenerator.genHours(d);
+                    List<TimeSlot> timeSlots = HoursGenerator.genHours(d, daysAvailable);
 
                     // Get the name of the currently selected class, which we stored
                     // in a cookie previously.
