@@ -135,6 +135,8 @@ class HoursFinder
     private static void renderDisplayGeneratedHours(Context ctx, List<GeneratedHour> hours)
     {
         Map<String, Object> model = new HashMap<>();
+        // Get the current class from the cookie store.
+        // We use it as a caption for the table of generated hours.
         model.put("classname", ctx.cookieStore("current_class"));
 
         // TODO: test that no hours coincide with the class being selected
@@ -159,23 +161,4 @@ class HoursFinder
         // Render the mustache file with the given model.
         ctx.render(Paths.MUSTACHE_SELECT_CLASS, model);
     }
-
-    private static DayOfWeek strToDayOfWeek(String s)
-    {
-        switch (s) {
-            case "m":
-                return DayOfWeek.MONDAY;
-            case "tu":
-                return DayOfWeek.TUESDAY;
-            case "w":
-                return DayOfWeek.WEDNESDAY;
-            case "tr":
-                return DayOfWeek.THURSDAY;
-            case "f":
-                return DayOfWeek.FRIDAY;
-            default:
-                throw new IllegalArgumentException("Failed to convert '" + s + "' to DayOfWeek");
-        }
-    }
-
 }
