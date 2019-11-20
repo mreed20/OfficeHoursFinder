@@ -16,16 +16,6 @@ public class Teacher
     }
 
     @Override
-    public String toString()
-    {
-        return "Teacher{" +
-                "name='" + name + '\'' +
-                ", gNumber=" + gNumber +
-                ", classesTaught=" + classesTaught +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o)
     {
         if (this == o) return true;
