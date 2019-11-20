@@ -4,16 +4,20 @@ import io.javalin.http.Context;
 import java.sql.SQLException;
 import java.time.DayOfWeek;
 import java.time.Duration;
-import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAccessor;
 import java.util.*;
 import java.util.stream.Collectors;
 
 class HoursFinder
 {
-
     // For getting all of our data
-    private static DatabaseConnector dc;
+    private static DatabaseConnector dc = null;
+
+    // Used for parsing in days of the week.
+    private static final DateTimeFormatter dayOfWeekFormatter =
+            DateTimeFormatter.ofPattern("E");
 
     public static void main(String[] args)
     {
@@ -78,10 +82,13 @@ class HoursFinder
                     // Get provided schedule from the HTTP POST, which contains information about which
                     // boxes the user checked (the form parameter will be non-null if the box is checked).
                     List<DayOfWeek> daysAvailable = new ArrayList<>();
-                    for (String key : new String[]{"m", "tu", "w", "tr", "f"}) {
+                    // These are the names of checkbox elements in select_availability.mustache.
+                    String[] dayCheckboxes = new String[]{"Mon", "Tue", "Wed", "Thu", "Fri"};
+                    for (String key : dayCheckboxes) {
                         if (ctx.formParam(key) != null) {
                             // The user said they are free on this day.
-                            daysAvailable.add(strToDayOfWeek(key));
+                            TemporalAccessor t = dayOfWeekFormatter.parse(key);
+                            daysAvailable.add(DayOfWeek.from(t));
                         }
                     }
 
@@ -132,15 +139,12 @@ class HoursFinder
 
         // TODO: test that no hours coincide with the class being selected
         hours.sort(Comparator.comparing(GeneratedHour::getAvailPercent).reversed());
-        // We need at least 5 hours to populate our table.
-        assert hours.size() >= 5;
 
-        Iterator<GeneratedHour> it = hours.iterator();
-        for (int i = 0; i < 5 && it.hasNext(); i++) {
-            GeneratedHour h = it.next();
-            model.put("a" + i, String.format("%.2f%%", h.getAvailPercent()));
-            model.put("t" + i, h.getTimeSlot().toString());
-        }
+        List<GeneratedHour> newList = hours.stream()
+                                           .limit(5)
+                                           .collect(Collectors.toList());
+        model.put("hours", newList);
+
         ctx.render(Paths.MUSTACHE_DISPLAY_GENERATED_HOURS, model);
     }
 
@@ -150,19 +154,10 @@ class HoursFinder
         // Build a model which mustache will parse.
         Map<String, Object> model = new HashMap<>();
         model.put("username", teacher.name);
-        model.put("classes", classesToMap(teacher.classesTaught));
+        model.put("classes", teacher.classesTaught);
 
         // Render the mustache file with the given model.
         ctx.render(Paths.MUSTACHE_SELECT_CLASS, model);
-    }
-
-    private static List<Map<String, String>> classesToMap(List<SchoolClass> classes)
-    {
-        // TODO: this line of code gave me cancer, but it works
-        return classes.stream()
-                .map(c -> c.name)
-                .map(name -> Map.of("class", name))
-                .collect(Collectors.toList());
     }
 
     private static DayOfWeek strToDayOfWeek(String s)

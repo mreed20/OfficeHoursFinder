@@ -29,31 +29,18 @@ WHICH PRIORITIZES STUDENTS WHO COULD NOT ATTEND THE CHOSEN OFFICE HOUR
                 <th>Availability</th>
                 <th>Time Slot</th>
             </tr>
-            <tr>
-                <td><input class="w3-radio" type="radio" name="selection" value="{{t0}}" required /></td>
-                <td>{{a0}}</td>
-                <td>{{t0}}</td>
-            </tr>
-            <tr>
-                <td><input class="w3-radio" type="radio" name="selection" value="{{t1}}" /></td>
-                <td>{{a1}}</td>
-                <td>{{t1}}</td>
-            </tr>
-            <tr>
-                <td><input class="w3-radio" type="radio" name="selection" value="{{t2}}" /></td>
-                <td>{{a2}}</td>
-                <td>{{t2}}</td>
-            </tr>
-            <tr>
-                <td><input class="w3-radio" type="radio" name="selection" value="{{t3}}" /></td>
-                <td>{{a3}}</td>
-                <td>{{t3}}</td>
-            </tr>
-            <tr>
-                <td><input class="w3-radio" type="radio" name="selection" value="{{t4}}" /></td>
-                <td>{{a4}}</td>
-                <td>{{t4}}</td>
-            </tr>
+            {{#hours}}
+                <tr>
+                    <td><input class="w3-radio"
+                               type="radio"
+                               name="selection"
+                               value="{{timeSlot}}"
+                               required />
+                    </td>
+                    <td>{{availPercent}}</td>
+                    <td>{{timeSlot}}</td>
+                </tr>
+            {{/hours}}
             <tr>
                 <td colspan="3"><em>Additional results omitted</em></td>
             </tr>

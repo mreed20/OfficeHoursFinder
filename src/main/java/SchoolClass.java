@@ -19,17 +19,6 @@ class SchoolClass
     }
 
     @Override
-    public String toString()
-    {
-        return "SchoolClass{" +
-                "name='" + name + '\'' +
-                ", days=" + days +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o)
     {
         if (this == o) return true;
