@@ -25,8 +25,6 @@ class HoursFinder
 
     public static void main(String[] args)
     {
-        // THIS IS A HACK
-
         try {
             final String url = "jdbc:postgresql://localhost:5432/postgres";
             final String username = "postgres";
