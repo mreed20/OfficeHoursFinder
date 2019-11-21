@@ -2,7 +2,6 @@ import com.github.mustachejava.util.DecoratedCollection;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
-import javax.annotation.processing.Generated;
 import java.sql.SQLException;
 import java.time.DayOfWeek;
 import java.time.Duration;
@@ -10,7 +9,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAccessor;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 class HoursFinder
@@ -22,17 +20,12 @@ class HoursFinder
     private static final DateTimeFormatter dayOfWeekFormatter =
             DateTimeFormatter.ofPattern("E");
 
-    // Ugly hack to make list of time slots accessible across pages.
-    // Should probably use sessions instead.
-    private static final AtomicReference<List<TimeSlot>> selectedTimes =
-            new AtomicReference<>();
-    private static AtomicReference<List<GeneratedHour>> top10 =
-            new AtomicReference<>();
+    static List<TimeSlot> selectedTimes = new ArrayList<>();
+    static List<GeneratedHour> top10 = null;
 
     public static void main(String[] args)
     {
         // THIS IS A HACK
-        selectedTimes.set(new ArrayList<>());
 
         try {
             final String url = "jdbc:postgresql://localhost:5432/postgres";
@@ -125,7 +118,7 @@ class HoursFinder
                     ScheduleAnalyzer analyzer = new ScheduleAnalyzer(students, timeSlots);
 
                     // Tell the ScheduleAnalyzer to account for previously selected office hours when scheduling.
-                    for (TimeSlot t : selectedTimes.get()) {
+                    for (TimeSlot t : selectedTimes) {
                         analyzer.setOfficeHour(t);
                     }
 
@@ -137,20 +130,20 @@ class HoursFinder
 
         app.post("/generate_again", ctx -> {
                     String nextPage = ctx.formParam("next_page");
+                    assert nextPage != null;
                     switch (nextPage) {
                         case "same_class":
                             // Store the selected time slot.
                             int i = Integer.parseInt(ctx.formParam("timeslot_selection"));
-                            TimeSlot t = top10.get().get(i).getTimeSlot();
-                            selectedTimes.get().add(t);
+                            TimeSlot t = top10.get(i).getTimeSlot();
+                            selectedTimes.add(t);
 
                             // Bring the user back to the availability selection screen
                             ctx.render(Constants.MUSTACHE_SELECT_AVAILABILITY);
                             break;
                         case "new_class":
-                            // Clear, but do not delete, the selected hours list.
-                            // TODO: move this stuff inside main so we dont need to use an AtomicReference
-                            selectedTimes.get().clear();
+                            // Clear, not delete, the selected hours list.
+                            selectedTimes.clear();
 
                             // Bring the user back to the class selection page.
                             int gNumber = ctx.cookieStore(Constants.COOKIE_CURRENT_USER);
@@ -183,11 +176,11 @@ class HoursFinder
         hours.sort(Comparator.comparing(GeneratedHour::getAvailPercent).reversed());
 
         // Get the top 5 time slots by availability percentage...
-        top10.set(hours.stream().limit(10).collect(Collectors.toList()));
+        top10 = hours.stream().limit(10).collect(Collectors.toList());
         // ... and wrap said time slots in a DecoratedCollection, which will
         // expose {{index}} tags (via the iterator) to the underlying mustache
         // template.
-        model.put("hours", new DecoratedCollection<>(top10.get()));
+        model.put("hours", new DecoratedCollection<>(top10));
 
         ctx.render(Constants.MUSTACHE_DISPLAY_GENERATED_HOURS, model);
     }
