@@ -15,7 +15,7 @@ class ScheduleAnalyzer
     //Contains list of students at every 15 minute interval who are available for next 30 minutes
     private final List<Student>[][] availableStudents;
     //chosenHours contains the TimeSlots that have been selected by the user for his/her office hours
-    private final List<TimeSlot> chosenHours;
+    private final List<GeneratedHour> chosenHours;
     //Pairings of TimeSlots and the corresponding list of available students for that office hour
     private final Map<TimeSlot, List<Student>> initialHours;
     private final int NUMDAYS = 5;
@@ -42,52 +42,65 @@ class ScheduleAnalyzer
         this.initialHours = calculateAvailabilities();
     }
 
-//    public static void main(String[] args)
-//    {
-//        List<SchoolClass> classes1 = new ArrayList<>();
-//        List<SchoolClass> classes2 = new ArrayList<>();
-//        List<SchoolClass> classes3 = new ArrayList<>();
-//        List<SchoolClass> classes4 = new ArrayList<>();
-//        List<DayOfWeek> List1 = new ArrayList<>();
-//        List1.add(DayOfWeek.TUESDAY);
-//        SchoolClass CS321 = new SchoolClass("CS321", List1, LocalTime.of(12, 0, 0), LocalTime.of(13, 15, 0));
-//        SchoolClass CS484 = new SchoolClass("CS484", List1, LocalTime.of(13, 0, 0), LocalTime.of(14, 15, 0));
-//        classes1.add(CS321);
-//        classes2.add(CS484);
-//        classes3.add(CS321);
-//        classes3.add(CS484);
-//        List<Student> students = new ArrayList<>();
-//        students.add(new Student("Kiwoong", classes1));
-//        students.add(new Student("Avi", classes1));
-//        students.add(new Student("Michael", classes1));
-//        students.add(new Student("Serral", classes1));
-//        students.add(new Student("Frank", classes2));
-//        students.add(new Student("Scott", classes2));
-//        students.add(new Student("Bob", classes3));
-//        students.add(new Student("Matt", classes3));
-//        students.add(new Student("Bob", classes4));
-//        students.add(new Student("Matt", classes4));
-//
-//        List<TimeSlot> times = new ArrayList<>();
-//        times.add(new TimeSlot(DayOfWeek.TUESDAY, LocalTime.of(12, 0, 0), LocalTime.of(13, 30, 0)));
-//        times.add(new TimeSlot(DayOfWeek.TUESDAY, LocalTime.of(13, 0, 0), LocalTime.of(13, 30, 0)));
-//        times.add(new TimeSlot(DayOfWeek.TUESDAY, LocalTime.of(13, 0, 0), LocalTime.of(14, 30, 0)));
-//
-//        ScheduleAnalyzer schedule = new ScheduleAnalyzer(students, times);
-//        List<GeneratedHour> hours = schedule.buildGeneratedHours();
-//        GeneratedHour bestTime = hours.get(0);
-//        for (GeneratedHour hour : hours) {
-//            System.out.printf("%.2f %s %s\n", hour.getAvailPercent(), hour.getTimeSlot().getStartTime(), hour.getTimeSlot().getEndTime());
-//            if (hour.getAvailPercent() > bestTime.getAvailPercent())
-//                bestTime = hour;
-//        }
-//        schedule.setOfficeHour(bestTime.getTimeSlot());
-//        hours = schedule.buildGeneratedHours();
-//        System.out.println();
-//        for (GeneratedHour hour : hours) {
-//           System.out.printf("%.2f %s %s\n", hour.getAvailPercent(), hour.getTimeSlot().getStartTime(), hour.getTimeSlot().getEndTime());
-//       }
-//   }
+  /*  public static void main(String[] args)
+    {
+        List<SchoolClass> classes1 = new ArrayList<>();
+        List<SchoolClass> classes2 = new ArrayList<>();
+        List<SchoolClass> classes3 = new ArrayList<>();
+        List<SchoolClass> classes4 = new ArrayList<>();
+        List<DayOfWeek> List1 = new ArrayList<>();
+        List1.add(DayOfWeek.TUESDAY);
+        SchoolClass CS321 = new SchoolClass("CS321", List1, LocalTime.of(12, 0, 0), LocalTime.of(13, 15, 0));
+        SchoolClass CS484 = new SchoolClass("CS484", List1, LocalTime.of(13, 0, 0), LocalTime.of(14, 15, 0));
+        classes1.add(CS321);
+        classes2.add(CS484);
+        classes3.add(CS321);
+        classes3.add(CS484);
+        List<Student> students = new ArrayList<>();
+        students.add(new Student("Kiwoong", classes1));
+        students.add(new Student("Avi", classes1));
+        students.add(new Student("Michael", classes1));
+        students.add(new Student("Serral", classes1));
+        students.add(new Student("Frank", classes2));
+        students.add(new Student("Scott", classes2));
+        students.add(new Student("Bob", classes3));
+        students.add(new Student("Matt", classes3));
+        students.add(new Student("Bob", classes4));
+        students.add(new Student("Matt", classes4));
+
+        List<TimeSlot> times = new ArrayList<>();
+        times.add(new TimeSlot(DayOfWeek.TUESDAY, LocalTime.of(12, 0, 0), LocalTime.of(13, 30, 0)));
+        times.add(new TimeSlot(DayOfWeek.TUESDAY, LocalTime.of(13, 0, 0), LocalTime.of(13, 30, 0)));
+        times.add(new TimeSlot(DayOfWeek.TUESDAY, LocalTime.of(13, 0, 0), LocalTime.of(14, 30, 0)));
+
+        ScheduleAnalyzer schedule = new ScheduleAnalyzer(students, times);
+        List<GeneratedHour> hours = schedule.buildGeneratedHours();
+        GeneratedHour bestTime = hours.get(0);
+        for (GeneratedHour hour : hours) {
+            System.out.printf("%.2f %s\n", hour.getAvailPercent(), hour.getTimeSlot().toString());
+            if (hour.getAvailPercent() > bestTime.getAvailPercent())
+                bestTime = hour;
+        }
+        schedule.setOfficeHour(bestTime);
+        hours = schedule.buildGeneratedHours();
+        System.out.println();
+        bestTime = hours.get(0);
+        for (GeneratedHour hour : hours) {
+           System.out.printf("%.2f %s\n", hour.getAvailPercent(), hour.getTimeSlot().toString());
+            if (hour.getAvailPercent() > bestTime.getAvailPercent())
+                bestTime = hour;
+       }
+        schedule.setOfficeHour(bestTime);
+        hours = schedule.buildGeneratedHours();
+        System.out.println();
+        bestTime = hours.get(0);
+        for (GeneratedHour hour : hours) {
+            System.out.printf("%.2f %s\n", hour.getAvailPercent(), hour.getTimeSlot().toString());
+            if (hour.getAvailPercent() > bestTime.getAvailPercent())
+                bestTime = hour;
+        }
+
+   }*/
 
     /**
      * Returns integer representation of a DayOfTheWeek,
@@ -127,9 +140,9 @@ class ScheduleAnalyzer
 		 */
         else {
             students = new ArrayList<>(this.students);
-            for (TimeSlot t : chosenHours) {
-                students.removeAll(initialHours.get(t));
-                alreadyAvail.addAll(initialHours.get(t));
+            for (GeneratedHour t : chosenHours) {
+                students.removeAll(t.getAvailStudents());
+                alreadyAvail.addAll(t.getAvailStudents());
             }
         }
 
@@ -139,7 +152,7 @@ class ScheduleAnalyzer
         if (chosenHours.size() != 0) {
             for (TimeSlot t : this.hours) {
                 //Skip TimeSlots that are already chosen
-                if (!chosenHours.contains(t)) {
+                if (!containsHour(t)) {
                     //Gets the original list of students who could attend a given timeSlot and removes the students
                     //Who are already available to go to a chosen office hour
                     List<Student> studentsAvailable = new ArrayList<>(initialHours.get(t));
@@ -152,7 +165,7 @@ class ScheduleAnalyzer
                     else
                         availPercent = ((float) (studentsAvailable.size())) / students.size() * 100;
 
-                    generatedHours.add(new GeneratedHour(availPercent, t));
+                    generatedHours.add(new GeneratedHour(availPercent, t, initialHours.get(t)));
                 }
             }
             return generatedHours;
@@ -161,7 +174,7 @@ class ScheduleAnalyzer
         else {
             for (TimeSlot t : this.hours) {
                 float availPercent = ((float) (initialHours.get(t).size())) / students.size() * 100;
-                generatedHours.add(new GeneratedHour(availPercent, t));
+                generatedHours.add(new GeneratedHour(availPercent, t, initialHours.get(t)));
             }
             return generatedHours;
         }
@@ -171,12 +184,12 @@ class ScheduleAnalyzer
     private Map<TimeSlot, List<Student>> calculateAvailabilities()
     {
 
-        List<Student> alreadyAvail = new ArrayList<>();
+        /*List<Student> alreadyAvail = new ArrayList<>();
         if (this.chosenHours.size() != 0) {
             for (TimeSlot t : chosenHours) {
                 alreadyAvail.addAll(initialHours.get(t));
             }
-        }
+        }*/
 
 
         Map<TimeSlot, List<Student>> studentsPerTimeSlot = new HashMap<>();
@@ -188,18 +201,20 @@ class ScheduleAnalyzer
             // the end-1 is related to 30 minute intervals
             for (int j = start; j < end - 1; j++) {
                 for (Student student : availableStudents[i][j]) {
-                    if (!available.contains(student) && !alreadyAvail.contains(student)) {
+                    if (!available.contains(student) /*&& !alreadyAvail.contains(student)*/) {
                         available.add(student);
                     }
                 }
             }
             studentsPerTimeSlot.put(hour, available);
         }
+        /*
         if (chosenHours.size() != 0) {
-            for (TimeSlot t : chosenHours) {
+            for (GeneratedHour t : chosenHours) {
                 studentsPerTimeSlot.remove(t);
             }
         }
+        */
         return studentsPerTimeSlot;
     }
 
@@ -223,7 +238,7 @@ class ScheduleAnalyzer
      * Adds a specified TimeSlot into the list of chosenHours. Adding a member to chosenHours will affect future calls
      * of buildGeneratedHours.
      */
-    void setOfficeHour(TimeSlot t)
+    void setOfficeHour(GeneratedHour t)
     {
         this.chosenHours.add(t);
     }
@@ -233,9 +248,9 @@ class ScheduleAnalyzer
         if (chosenHours.size() == 0) throw new RuntimeException();
 
         List<Student> availableStudents = new ArrayList<>();
-        for (TimeSlot t : chosenHours) {
-            availableStudents.removeAll(initialHours.get(t));
-            availableStudents.addAll(initialHours.get(t));
+        for (GeneratedHour t : chosenHours) {
+            availableStudents.removeAll(t.getAvailStudents());
+            availableStudents.addAll(t.getAvailStudents());
         }
 
         return ((float) (availableStudents.size())) / this.students.size();
@@ -265,6 +280,16 @@ class ScheduleAnalyzer
             }
         }
         return available;
+    }
+
+    boolean containsHour(TimeSlot t)
+    {
+        for(GeneratedHour h : chosenHours)
+        {
+            if(h.getTimeSlot().equals(t))
+                return true;
+        }
+        return false;
     }
 
 }

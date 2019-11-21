@@ -1,14 +1,17 @@
 import java.util.Objects;
+import java.util.List;
 
 class GeneratedHour
 {
     final float availPercent;
     final TimeSlot timeSlot;
+    final List<Student> availStudents;
 
-    GeneratedHour(float availPercent, TimeSlot timeSlot)
+    GeneratedHour(float availPercent, TimeSlot timeSlot, List<Student> availStudents)
     {
         this.availPercent = availPercent;
         this.timeSlot = timeSlot;
+        this.availStudents = availStudents;
     }
 
     public float getAvailPercent()
@@ -19,6 +22,11 @@ class GeneratedHour
     public TimeSlot getTimeSlot()
     {
         return timeSlot;
+    }
+
+    public List<Student> getAvailStudents()
+    {
+        return availStudents;
     }
 
     @Override
