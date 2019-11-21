@@ -9,7 +9,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAccessor;
 import java.util.*;
-import java.util.stream.Collectors;
 
 class HoursFinder
 {
@@ -21,7 +20,7 @@ class HoursFinder
             DateTimeFormatter.ofPattern("E");
 
     static List<GeneratedHour> selectedHours = new ArrayList<>();
-    static List<GeneratedHour> top10 = null;
+    static List<GeneratedHour> generatedHours = null;
 
     public static void main(String[] args)
     {
@@ -133,7 +132,7 @@ class HoursFinder
                         case "same_class":
                             // Store the selected time slot.
                             int i = Integer.parseInt(ctx.formParam("timeslot_selection"));
-                            GeneratedHour g = top10.get(i);
+                            GeneratedHour g = generatedHours.get(i);
                             selectedHours.add(g);
 
                             // Bring the user back to the availability selection screen
@@ -157,6 +156,9 @@ class HoursFinder
         app.before("/logout", ctx -> {
                     // Clear cookies.
                     ctx.clearCookieStore();
+                    // Clear the selected and generated hours.
+                    selectedHours.clear();
+                    generatedHours = null;
                     // Redirect to home page.
                     ctx.redirect("/logged_out.html");
                 }
@@ -170,15 +172,15 @@ class HoursFinder
         // We use it as a caption for the table of generated hours.
         model.put("classname", ctx.cookieStore(Constants.COOKIE_CURRENT_CLASS));
 
-        // TODO: test that no hours coincide with the class being selected
         hours.sort(Comparator.comparing(GeneratedHour::getAvailPercent).reversed());
 
-        // Get the top 5 time slots by availability percentage...
-        top10 = hours.stream().collect(Collectors.toList());
-        // ... and wrap said time slots in a DecoratedCollection, which will
+        // Make the list of hours globally accessible, so that the "/generate_again"
+        // handler can access the hour selected by the user.
+        generatedHours = hours;
+        // Wrap the selected hours in a DecoratedCollection, which will
         // expose {{index}} tags (via the iterator) to the underlying mustache
-        // template.
-        model.put("hours", new DecoratedCollection<>(top10));
+        // template. We use this index to pick a list of hours from those generated.
+        model.put("hours", new DecoratedCollection<>(hours));
 
         ctx.render(Constants.MUSTACHE_DISPLAY_GENERATED_HOURS, model);
     }
