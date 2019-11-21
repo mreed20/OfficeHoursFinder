@@ -20,7 +20,7 @@ class HoursFinder
     private static final DateTimeFormatter dayOfWeekFormatter =
             DateTimeFormatter.ofPattern("E");
 
-    static List<TimeSlot> selectedTimes = new ArrayList<>();
+    static List<GeneratedHour> selectedHours = new ArrayList<>();
     static List<GeneratedHour> top10 = null;
 
     public static void main(String[] args)
@@ -116,8 +116,8 @@ class HoursFinder
                     ScheduleAnalyzer analyzer = new ScheduleAnalyzer(students, timeSlots);
 
                     // Tell the ScheduleAnalyzer to account for previously selected office hours when scheduling.
-                    for (TimeSlot t : selectedTimes) {
-                        analyzer.setOfficeHour(t);
+                    for (GeneratedHour g : selectedHours) {
+                        analyzer.setOfficeHour(g);
                     }
 
                     // Finally generate the office hours.
@@ -133,15 +133,15 @@ class HoursFinder
                         case "same_class":
                             // Store the selected time slot.
                             int i = Integer.parseInt(ctx.formParam("timeslot_selection"));
-                            TimeSlot t = top10.get(i).getTimeSlot();
-                            selectedTimes.add(t);
+                            GeneratedHour g = top10.get(i);
+                            selectedHours.add(g);
 
                             // Bring the user back to the availability selection screen
                             ctx.render(Constants.MUSTACHE_SELECT_AVAILABILITY);
                             break;
                         case "new_class":
                             // Clear, not delete, the selected hours list.
-                            selectedTimes.clear();
+                            selectedHours.clear();
 
                             // Bring the user back to the class selection page.
                             int gNumber = ctx.cookieStore(Constants.COOKIE_CURRENT_USER);
@@ -174,7 +174,7 @@ class HoursFinder
         hours.sort(Comparator.comparing(GeneratedHour::getAvailPercent).reversed());
 
         // Get the top 5 time slots by availability percentage...
-        top10 = hours.stream().limit(10).collect(Collectors.toList());
+        top10 = hours.stream().collect(Collectors.toList());
         // ... and wrap said time slots in a DecoratedCollection, which will
         // expose {{index}} tags (via the iterator) to the underlying mustache
         // template.
