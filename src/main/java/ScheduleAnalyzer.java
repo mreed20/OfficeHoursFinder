@@ -85,9 +85,9 @@ class ScheduleAnalyzer
 //        hours = schedule.buildGeneratedHours();
 //        System.out.println();
 //        for (GeneratedHour hour : hours) {
-//            System.out.printf("%.2f %s %s\n", hour.getAvailPercent(), hour.getTimeSlot().getStartTime(), hour.getTimeSlot().getEndTime());
-//        }
-//    }
+//           System.out.printf("%.2f %s %s\n", hour.getAvailPercent(), hour.getTimeSlot().getStartTime(), hour.getTimeSlot().getEndTime());
+//       }
+//   }
 
     /**
      * Returns integer representation of a DayOfTheWeek,
@@ -144,7 +144,14 @@ class ScheduleAnalyzer
                     //Who are already available to go to a chosen office hour
                     List<Student> studentsAvailable = new ArrayList<>(initialHours.get(t));
                     studentsAvailable.removeAll(alreadyAvail);
-                    float availPercent = ((float) (studentsAvailable.size())) / students.size() * 100;
+                    float availPercent;
+                    //If all students can attend at least one office hour, calculate availPercent normally
+                    if(students.size() == 0)
+                        availPercent = ((float) (initialHours.get(t).size())) / students.size() * 100;
+                    //If there are students who cannot attend one section, only consider them
+                    else
+                        availPercent = ((float) (studentsAvailable.size())) / students.size() * 100;
+
                     generatedHours.add(new GeneratedHour(availPercent, t));
                 }
             }
