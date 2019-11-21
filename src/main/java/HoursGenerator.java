@@ -12,8 +12,8 @@ import java.util.List;
  */
 class HoursGenerator
 {
-    private static final int eightAM = localTimeToIndex(LocalTime.of(8, 0));
-    private static final int tenPM = localTimeToIndex(LocalTime.of(22, 0));
+    private static final int eightAM = localTimeToIndex(LocalTime.of(9, 0));
+    private static final int tenPM = localTimeToIndex(LocalTime.of(18, 0));
 
     /**
      * The main function
