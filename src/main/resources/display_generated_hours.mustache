@@ -33,12 +33,12 @@ WHICH PRIORITIZES STUDENTS WHO COULD NOT ATTEND THE CHOSEN OFFICE HOUR
                 <tr>
                     <td><input class="w3-radio"
                                type="radio"
-                               name="selection"
-                               value="{{timeSlot}}"
+                               name="timeslot_selection"
+                               value="{{index}}"
                                required />
                     </td>
-                    <td>{{availPercent}}</td>
-                    <td>{{timeSlot}}</td>
+                    <td>{{value.availPercent}}</td>
+                    <td>{{value.timeSlot}}</td>
                 </tr>
             {{/hours}}
             <tr>
@@ -50,7 +50,7 @@ WHICH PRIORITIZES STUDENTS WHO COULD NOT ATTEND THE CHOSEN OFFICE HOUR
             <button class="w3-button">Generate more hours for...</button>
             <div class="w3-dropdown-content w3-bar-block w3-border">
                 <button class="w3-bar-item w3-button" name="next_page" type="submit" value="same_class">{{classname}}</button>
-                <button class="w3-bar-item w3-button" name="next_page" type="submit" value="new_class">(New class)</button>
+                <button class="w3-bar-item w3-button" name="next_page" type="submit" value="new_class">New class</button>
             </div>
         </div>
 
