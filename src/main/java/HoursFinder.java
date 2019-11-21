@@ -75,7 +75,14 @@ class HoursFinder
                     // have the `required` attribute, meaning that at least one radio button must be selected
                     // before the browser submits the form.
                     assert selection != null;
+
+                    // Store the class selection and time for later use.
+                    SchoolClass c = dc.getSchoolClass(selection);
+                    TimeSlot t = new TimeSlot(c.days.get(0), c.startTime, c.endTime);
+                    ctx.cookieStore(Constants.COOKIE_CURRENT_TIMESLOT_STR, t.toString());
                     ctx.cookieStore(Constants.COOKIE_CURRENT_CLASS, selection);
+
+                    // Render the page.
                     ctx.render(Constants.MUSTACHE_SELECT_AVAILABILITY);
                 }
         );
@@ -171,6 +178,9 @@ class HoursFinder
         // Get the current class from the cookie store.
         // We use it as a caption for the table of generated hours.
         model.put("classname", ctx.cookieStore(Constants.COOKIE_CURRENT_CLASS));
+
+        // Get the associated class time.
+        model.put("classtime", ctx.cookieStore(Constants.COOKIE_CURRENT_TIMESLOT_STR));
 
         hours.sort(Comparator.comparing(GeneratedHour::getAvailPercent).reversed());
 

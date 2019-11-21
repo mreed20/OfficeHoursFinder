@@ -8,6 +8,7 @@ class DatabaseConnector
 {
     private final Map<Integer, Student> students = new HashMap<>();
     private final Map<Integer, Teacher> teachers = new HashMap<>();
+    private final List<SchoolClass> classes = new ArrayList<>();
 
 
     DatabaseConnector(String url, String username, String password) throws SQLException
@@ -20,7 +21,6 @@ class DatabaseConnector
         ResultSet rs = statement.executeQuery("select * from public.classes"); //gets the list of all the classes from the classes table
 
         // loops through the result set and makes each a class a new SchoolClass object
-        List<SchoolClass> classes = new ArrayList<>();
         while (rs.next()) {
 
             String days = rs.getString("days"); //gets the days from the database
@@ -90,6 +90,17 @@ class DatabaseConnector
 
             teachers.put(gnum, new Teacher(teach_name, gnum, teacher_classes)); //adds a new student object to the s list
         }
+    }
+
+    // Given a class name, gets the associated time slot.
+    SchoolClass getSchoolClass(String name)
+    {
+        for (SchoolClass c : classes) {
+            if (c.name.equals(name)) {
+                return c;
+            }
+        }
+        return null;
     }
 
     // Get all the students in a class.
