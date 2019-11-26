@@ -42,7 +42,7 @@ class ScheduleAnalyzer
         this.initialHours = calculateAvailabilities();
     }
 
-  /*  public static void main(String[] args)
+    public static void main(String[] args)
     {
         List<SchoolClass> classes1 = new ArrayList<>();
         List<SchoolClass> classes2 = new ArrayList<>();
@@ -77,7 +77,7 @@ class ScheduleAnalyzer
         List<GeneratedHour> hours = schedule.buildGeneratedHours();
         GeneratedHour bestTime = hours.get(0);
         for (GeneratedHour hour : hours) {
-            System.out.printf("%.2f %s\n", hour.getAvailPercent(), hour.getTimeSlot().toString());
+            System.out.printf("%f %s\n", hour.getAvailPercent(), hour.getTimeSlot().toString());
             if (hour.getAvailPercent() > bestTime.getAvailPercent())
                 bestTime = hour;
         }
@@ -86,7 +86,7 @@ class ScheduleAnalyzer
         System.out.println();
         bestTime = hours.get(0);
         for (GeneratedHour hour : hours) {
-           System.out.printf("%.2f %s\n", hour.getAvailPercent(), hour.getTimeSlot().toString());
+           System.out.printf("%f %s\n", hour.getAvailPercent(), hour.getTimeSlot().toString());
             if (hour.getAvailPercent() > bestTime.getAvailPercent())
                 bestTime = hour;
        }
@@ -100,7 +100,7 @@ class ScheduleAnalyzer
                 bestTime = hour;
         }
 
-   }*/
+   }
 
     /**
      * Returns integer representation of a DayOfTheWeek,
@@ -253,7 +253,7 @@ class ScheduleAnalyzer
             availableStudents.addAll(t.getAvailStudents());
         }
 
-        return ((float) (availableStudents.size())) / this.students.size();
+        return ((float) 100 * (availableStudents.size())) / this.students.size();
     }
 
     /**
@@ -282,7 +282,11 @@ class ScheduleAnalyzer
         return available;
     }
 
-    boolean containsHour(TimeSlot t)
+    public List<GeneratedHour> getChosenHours(){
+        return this.chosenHours;
+    }
+
+    private boolean containsHour(TimeSlot t)
     {
         for(GeneratedHour h : chosenHours)
         {
