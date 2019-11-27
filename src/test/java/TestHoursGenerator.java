@@ -81,20 +81,28 @@ class TestHoursGenerator extends HoursGenerator
     @Test
     void testGenHours()
     {
-        // TODO (kiwoong): test this
+        //office hour length of one hour and on mondays and wednesdays
         Duration dur = Duration.ofMinutes(60);
-        TimeSlot class1 = new TimeSlot(DayOfWeek.WEDNESDAY,
-                LocalTime.of(8, 0),
-                LocalTime.of(22, 0));
-        TimeSlot class2 = new TimeSlot(DayOfWeek.FRIDAY,
-                LocalTime.of(8, 0),
-                LocalTime.of(22, 0));
 
         List<TimeSlot> officeHours = HoursGenerator.genHours(dur, List.of(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY));
-
         for (TimeSlot hour : officeHours) {
-            // TODO: do something test-like here
+            assertTrue(hour.getDay() == DayOfWeek.WEDNESDAY || hour.getDay() == DayOfWeek.MONDAY);
         }
+        assertTrue(officeHours.size() == 36);
+
+        //office hour length of 20 hours, should be no time slot available
+        dur = Duration.ofMinutes(1200);
+        officeHours = HoursGenerator.genHours(dur, List.of(DayOfWeek.MONDAY,DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY));
+        assertTrue(officeHours.size() == 0);
+
+        //office hour length 2 hours and on thursdays + fridays
+        dur = Duration.ofMinutes(120);
+        officeHours = HoursGenerator.genHours(dur, List.of(DayOfWeek.THURSDAY,DayOfWeek.FRIDAY));
+        for (TimeSlot hour : officeHours) {
+            assertTrue(hour.getDay() == DayOfWeek.THURSDAY || hour.getDay() == DayOfWeek.FRIDAY);
+        }
+
+
     }
 
 }
