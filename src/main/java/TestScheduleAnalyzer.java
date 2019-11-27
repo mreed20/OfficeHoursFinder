@@ -1,4 +1,3 @@
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.DayOfWeek;
@@ -8,10 +7,11 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class ScheduleAnalyzerTest {
+class TestScheduleAnalyzer
+{
 
     @Test
-    void buildGeneratedHours() {
+    void testBuildGeneratedHours() {
         List<SchoolClass> classes1 = new ArrayList<>();
         List<SchoolClass> classes2 = new ArrayList<>();
         List<SchoolClass> classes3 = new ArrayList<>();
@@ -75,7 +75,7 @@ class ScheduleAnalyzerTest {
     }
 
     @Test
-    void setOfficeHour() {
+    void testSetOfficeHour() {
         List<Student> students = new ArrayList<>();
         List<TimeSlot> times = new ArrayList<>();
         ScheduleAnalyzer schedule = new ScheduleAnalyzer(students, times);
@@ -88,7 +88,7 @@ class ScheduleAnalyzerTest {
     }
 
     @Test
-    void getTotalAvailPercent() {
+    void testGetTotalAvailPercent() {
         List<SchoolClass> classes1 = new ArrayList<>();
         List<SchoolClass> classes2 = new ArrayList<>();
         List<SchoolClass> classes3 = new ArrayList<>();
